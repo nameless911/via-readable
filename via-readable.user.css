@@ -1,7 +1,7 @@
 /* ==UserStyle==
 @name         VIA readable (Filer palette)
 @namespace    local
-@version      1.15.0
+@version      1.16.0
 @description  VIA の薄ピンクとフォントを、Filer の theme.py と同じ Win11 配色と UD フォントに置き換える。Windows のライト/ダークに追従。
 ==/UserStyle== */
 
@@ -197,7 +197,35 @@ div[style*="pointer-events: all"][style*="position: absolute"] > div > div:last-
    色を直接塗りつぶすと、選択中のキーの色分けまで消えるので、反転にしている。
    hue-rotate で色相だけ元に戻すので、選択中の色は色味を保ったまま暗くなる。 */
 div[style*="pointer-events: all"][style*="position: absolute"] > div > div:last-child > div > div > div:has(> canvas) {
-  filter: invert(0.885) hue-rotate(180deg);
+  /* 選択中(--sel = 1)は反転をやめて強調色で塗る。黒い刻印がそのまま強調色の上に乗る。 */
+  filter: invert(calc(0.885 * (1 - var(--sel)))) hue-rotate(calc(180deg * (1 - var(--sel)))) !important;
+  background-color: color-mix(in srgb, var(--p-accent) calc(var(--sel) * 100%), #fefefe) !important;
+}
+
+/* ---------- 選択中のキー ----------
+   VIA は選択中のキーを「ちょこっとだけ小さくして、ほんのり明るさを脈打たせる」だけで示している。
+   これで見分けがつくと思っているのか。何年も放置されているが、視認性はほぼゼロ。
+   (白いキーキャップの明るさをさらに上げても、白は白のまま。差は出ない。)
+
+   選択中のキーにだけ「select-glow」という名前のアニメーションが付くので、
+   同じ名前のアニメーションをここで定義し直して乗っ取る:
+     - --sel を 1 にする(子要素の天面まで受け継がれる)→ 天面を強調色で塗る
+     - 外側に強調色の枠を付ける、明るさの脈打ちは止める
+   縮める動きはやめる(全部のキーの transform を外す)。 */
+@property --sel {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 0;
+}
+@keyframes select-glow {
+  from, to {
+    --sel: 1;
+    filter: none;
+    box-shadow: 0 0 0 2px var(--p-accent);
+  }
+}
+div[style*="pointer-events: all"][style*="position: absolute"] > div > div:last-child > div > div {
+  transform: none !important;
 }
 
 /* ---------- 左端のメニューに名前を出す ----------
