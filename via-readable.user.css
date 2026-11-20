@@ -229,7 +229,7 @@ div[style^="pointer-events: all"] span:has(> svg)::after {
   font-size: 14px;
 }
 
-/* 選択中は Windows 2000 のメニューのように、帯で塗る。色は Filer と同じ選択色(--p-sel)。
+/* 選択中は Windows 2000 のメニューのように、帯で塗る。色は上端のアイコンと同じ強調色(--p-sel)。
    VIA は選択中かどうかを部品に書かず、文字色だけを変える
    (選択中 = --bg_icon-highlighted、非選択 = --color_icon-idle)。そこで
    選択中の文字色を選択色、非選択を透明にしておき、行の背景をその色(currentColor)で塗る。
