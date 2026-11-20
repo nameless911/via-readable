@@ -1,7 +1,7 @@
 /* ==UserStyle==
 @name         VIA readable
 @namespace    local
-@version      1.20.0
+@version      1.20.1
 @description  VIA の薄ピンクとフォントを、Filer の theme.py と同じ Win11 配色と UD フォントに置き換える。Windows のライト/ダークに追従。
 ==/UserStyle== */
 
@@ -496,16 +496,28 @@ div:has(> label + button + button + button + button) > button:nth-of-type(4)::af
    VIA は A〜Z、数字、記号…と五十音表のように並べるので、目的のキーを探すのに時間がかかる。
    本物のキーボード(ANSI フルサイズ)と同じ位置に並べ替える。
    一覧の中身(108 個)には名前が付いていないので、VIA が並べる順番(n 番目)で位置を決めている。
+   中身がちょうど 108 個の入れ物を探す。キーテスト画面のキーボードの絵も 108 個のことがあるので、
+   絵(canvas を含むもの)は除く。
    VIA が一覧の中身や順番を変えたら、ここも直す必要がある。
    横は 1 キー = 4 マスの 92 マス(本体 60 + 隙間 2 + 矢印キー周り 12 + 隙間 2 + テンキー 16)。 */
-div:has(> :nth-child(108)):not(:has(> :nth-child(109))) {
+div:has(> :nth-child(108)):not(:has(> :nth-child(109))):not(:has(canvas)) {
   grid-template-columns: repeat(92, minmax(0, 1fr)) !important;
   grid-auto-rows: 44px !important;
   gap: 4px 0 !important;
   width: 100% !important;
   max-width: 1100px;
-  & > * { width: auto !important; min-width: 0 !important; height: auto !important; margin: 0 2px !important;
-          font-size: 12px !important; line-height: 1.15 !important; white-space: normal !important; }
+  & > * { width: auto !important; min-width: 0 !important; height: auto !important; margin: 0 2px !important; }
+  /* 名前の長いキー(Print Screen など)が「…」で切れないように、文字を小さくして折り返す */
+  & > *, & > * > * {
+    font-size: 11px !important;
+    line-height: 1.15 !important;
+    white-space: normal !important;
+    text-overflow: clip !important;
+    overflow: visible !important;
+    overflow-wrap: anywhere;
+    padding-left: 1px !important;
+    padding-right: 1px !important;
+  }
   & > :nth-child(1) { grid-area: 1 / 77 / span 1 / span 4; }
   & > :nth-child(2) { grid-area: 1 / 81 / span 1 / span 4; }
   & > :nth-child(3) { grid-area: 1 / 1 / span 1 / span 4; }
