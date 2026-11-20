@@ -1,7 +1,7 @@
 /* ==UserStyle==
 @name         VIA readable
 @namespace    local
-@version      1.19.0
+@version      1.19.1
 @description  VIA の薄ピンクとフォントを、Filer の theme.py と同じ Win11 配色と UD フォントに置き換える。Windows のライト/ダークに追従。
 ==/UserStyle== */
 
@@ -302,6 +302,11 @@ div[style^="pointer-events: all"]:has(span > svg) {
 }
 div[style^="pointer-events: all"]:has(span > svg) * {
   width: auto;
+}
+/* 左端のメニューも、マウスを乗せると名前の吹き出しが出る。名前はもう横に書いてあるので、いらん。 */
+div[style^="pointer-events: all"] .tooltip,
+div[style^="pointer-events: all"] span:has(> svg) > span {
+  display: none !important;
 }
 div[style^="pointer-events: all"] span:has(> svg) {
   width: auto !important;
