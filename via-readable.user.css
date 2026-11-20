@@ -1,7 +1,7 @@
 /* ==UserStyle==
 @name         VIA readable
 @namespace    local
-@version      1.19.1
+@version      1.19.2
 @description  VIA の薄ピンクとフォントを、Filer の theme.py と同じ Win11 配色と UD フォントに置き換える。Windows のライト/ダークに追従。
 ==/UserStyle== */
 
@@ -157,8 +157,8 @@ span[href]:hover {
 /* 上端アイコンの吹き出し。
    VIA はマウスを乗せると、名前の吹き出しをびよんと拡大しながら出す。うざいし、そもそも要らない。
    名前は最初から見えていればいいので、吹き出しは消して、アイコンの下に常に名前を貼る。
-   クソ UI の家電に容赦なく貼られるテプラと同じ発想(白いテープに黒い太字)。
-   帯の高さ(50px)に収まるように、アイコンは 22px、テープは 11px にしている。
+   クソ UI の家電に容赦なく貼られるテプラと同じ発想(見た目は普通の文字。テープ風にはしない)。
+   帯の高さ(50px)に収まるように、アイコンは 22px、名前は 11px にしている。
    日本語にすると「設定」が二つ並んで区別がつかないので、何の画面か分かる名前にしてある。 */
 span[href] .tooltip {
   display: none !important;
@@ -186,13 +186,8 @@ span[href] > svg {
 span[href]::after {
   font-size: 11px;
   line-height: 14px;
-  padding: 1px 5px;
-  background: #E8E8E8;
-  color: #000;
-  font-weight: 700;
-  letter-spacing: 0.05em;
   white-space: nowrap;
-  border-radius: 1px;
+  /* 色はアイコンと同じ(選択中は強調色の上の文字色になる) */
 }
 span[href="/"]::after         { content: "キー配列"; }
 span[href="/test"]::after     { content: "キーテスト"; }
