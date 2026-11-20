@@ -1,0 +1,251 @@
+/* ==UserStyle==
+@name         VIA readable (Filer palette)
+@namespace    local
+@version      1.7.0
+@description  VIA の薄ピンクとフォントを、Filer の theme.py と同じ Win11 配色と UD フォントに置き換える。Windows のライト/ダークに追従。
+==/UserStyle== */
+
+/* ==========================================================================
+   クソったれた勘違いおしゃれは有害なのでやめようね！！！
+   ==========================================================================
+
+   「雰囲気が良い」は、読めることより優先される理由にならない。
+   文字は読むために置いてある。読めない文字は飾りですらなく、ただのノイズ。
+
+   ■ 科学的根拠(ちゃんとある)
+
+   1. コントラスト比の最低ラインは決まっている
+      W3C の WCAG 2.2 達成基準 1.4.3「コントラスト(最低限)」は、
+      本文の文字と背景のコントラスト比を 4.5:1 以上にするよう求めている。
+      この数字は ISO 9241-3 と ANSI/HFES 100-1988 が推奨する 3:1 を出発点に、
+      視力 20/40 程度(だいたい 80 歳の平均的な視力)で失われるコントラスト感度を
+      見込んで 4.5:1 に引き上げたもの。根拠は W3C の解説文書
+      "Understanding SC 1.4.3: Contrast (Minimum)" に書いてある。
+
+      VIA の元の配色を WCAG の式で測ると:
+        ラベル #707070 / 背景 #222222 ........ 3.21:1   … 不合格
+        文字 #796C6C / 背景 #EBE4E4 .......... 4.01:1   … 不合格
+        白文字 #FFFBFB / 背景 #C7C3C3 ........ 1.70:1   … 論外
+      このスタイルの配色:
+        本文(ダーク) #E8E8E8 / #191919 ..... 14.35:1
+        補助(ダーク) #9A9A9A / #202020 .....  5.79:1
+        本文(ライト) #1A1A1A / #FFFFFF ..... 17.40:1
+        補助(ライト) #6A6A6A / #F3F3F3 .....  4.87:1
+        強調(ダーク) #000000 / #4CC2FF ..... 10.47:1
+        強調(ライト) #FFFFFF / #0067C0 .....  5.67:1
+      全部 4.5:1 を超えている。
+
+   2. コントラスト感度は年齢とともに落ちる
+      Owsley, Sekuler & Siemsen (1983) "Contrast sensitivity throughout
+      adulthood", Vision Research 23(7) は、成人のコントラスト感度が
+      加齢とともに下がることを示した。
+      「自分の目では読める」は、デザインした人の目の話でしかない。
+
+   3. 細い文字は、低いコントラストの上では消える
+      字の線が細いほど、背景との差が出る面積が減る。だから WCAG も
+      ウェイトが太い大きな文字にだけ 3:1 への緩和を認めていて、細い字には認めていない。
+      薄い背景に細い Fira Sans を乗せるのは、悪いところを二つ重ねているのと同じ。
+
+   4. UD フォントは「読み間違えない」ために作られている
+      BIZ UD ゴシックは、モリサワがユニバーサルデザインの考え方で作った書体。
+      字の中の空間(ふところ)を広くとって、濁点・半濁点や似た形の字を
+      見分けやすくしてある。Windows 10 (1809) 以降には最初から入っている。
+
+   ■ 方針(Filer の DESIGN.md と同じ)
+     配色 … Windows 11 に合わせる(theme.py の win11 / win11_dark をそのまま使う)
+     フォント … BIZ UDP ゴシック。なければシステム標準
+   色を直したくなったら、下の「パレット」だけ触れば全部に効く。 */
+
+@-moz-document domain("usevia.app") {
+
+/* ---------- パレット:ダーク(win11_dark) ---------- */
+:root {
+  --p-bg:          #191919;  /* row_bg     : 一番奥の背景 */
+  --p-panel:       #202020;  /* side_bg    : メニュー・下のパネル */
+  --p-control:     #323232;  /* btn_top    : ボタン・セレクト */
+  --p-control-hi:  #3A3A3A;  /* btn_hover */
+  --p-border:      #3C3C3C;  /* btn_border */
+  --p-text:        #E8E8E8;  /* row_text */
+  --p-text-dim:    #9A9A9A;  /* row_dim    : 非選択のラベル */
+  --p-accent:      #4CC2FF;  /* tab_accent : 選択中・強調 */
+  --p-on-accent:   #000000;  /* 強調色の上に乗る文字 */
+}
+
+/* ---------- パレット:ライト(win11)。Windows がライトのときだけ ---------- */
+@media (prefers-color-scheme: light) {
+  :root {
+    --p-bg:          #FFFFFF;
+    --p-panel:       #F3F3F3;
+    --p-control:     #FDFDFD;
+    --p-control-hi:  #EAEAEA;
+    --p-border:      #D6D6D6;
+    --p-text:        #1A1A1A;
+    --p-text-dim:    #6A6A6A;
+    --p-accent:      #0067C0;
+    --p-on-accent:   #FFFFFF;
+  }
+}
+
+/* ---------- VIA の変数に流し込む ----------
+   VIA はテーマ色を <html style="--color_accent:…"> に直接書くので、!important で上書きする。 */
+:root {
+  --color_accent:            var(--p-accent) !important;
+  --color_inside-accent:     var(--p-on-accent) !important;
+
+  --bg_gradient:             var(--p-bg) !important;
+  --bg_menu:                 var(--p-panel) !important;
+  --bg_outside-accent:       var(--p-control) !important;
+  --bg_control:              var(--p-control) !important;
+  --bg_control-highlighted:  var(--p-control-hi) !important;
+  --bg_control_disabled:     var(--p-panel) !important;
+  --bg_icon:                 var(--p-text-dim) !important;
+  --bg_icon-highlighted:     var(--p-text) !important;
+
+  --color_label:             var(--p-text-dim) !important;
+  --color_label-highlighted: var(--p-text) !important;
+  --color_control:           var(--p-text) !important;
+  --color_control-disabled:  var(--p-text-dim) !important;
+  --color_control-highlighted: var(--p-text) !important;
+  --color_icon-highlighted:  var(--p-on-accent) !important;
+
+  --border_color_cell:       var(--p-border) !important;
+  --border_color_icon:       var(--p-border) !important;
+}
+
+html, body, #root {
+  background: var(--p-bg) !important;
+  color: var(--p-text) !important;
+}
+
+/* ---------- トップ画面のマスコットを消す ----------
+   キーボード未接続のときに出る、丸の中の顔つきチップの絵。情報量ゼロなので消す。
+   VIA のクラス名は毎回変わる自動生成なので、絵そのもの(svg#Layer_1, viewBox 600x600)を
+   含む枠を探して隠す。「Authorize device」ボタンは別の枠なので残る。 */
+div:has(> div > svg#Layer_1[viewBox="0 0 600 600"]) {
+  display: none !important;
+}
+
+/* ---------- フォント ----------
+   Fira Sans の細い字をやめて、BIZ UDP ゴシックにする(なければシステム標準)。
+   アイコン用フォント(Font Awesome)は巻き込まない。 */
+body, body *:not(svg):not(svg *):not([class*="fa-"]):not(i) {
+  font-family: "BIZ UDPGothic", "BIZ UDPゴシック",
+               "Segoe UI Variable Text", "Segoe UI",
+               "Yu Gothic UI", "Meiryo UI", system-ui, sans-serif !important;
+  -webkit-font-smoothing: auto !important;
+  letter-spacing: normal !important;
+}
+
+/* ---------- 上端のアイコン ----------
+   VIA は上端のアイコンを「強調色の上に乗る文字の色」(黒)で描くので、暗い帯の上だと沈む。
+   普段は本文と同じ明るい色にして、マウスを乗せたら強調色にする。 */
+:root {
+  --color_icon-top: var(--p-text) !important;
+}
+span[href]:hover {
+  color: var(--p-accent) !important;
+}
+
+/* 上端アイコンの吹き出し。日本語にすると「設定」が二つ並んで区別がつかないので、
+   言語に関係なく、何の画面か分かる名前に差し替える。 */
+span[href] .tooltip > div:first-child {
+  font-size: 0 !important;
+}
+span[href] .tooltip > div:first-child::after {
+  font-size: 16px;
+  white-space: nowrap;
+}
+span[href="/"]         .tooltip > div:first-child::after { content: "キー配列"; }
+span[href="/test"]     .tooltip > div:first-child::after { content: "キーテスト"; }
+span[href="/design"]   .tooltip > div:first-child::after { content: "定義ファイル"; }
+span[href="/settings"] .tooltip > div:first-child::after { content: "VIA の設定"; }
+
+/* ---------- キーボードの絵 ----------
+   VIA はキーボードの絵を、選んだテーマ(既定は白いキーキャップ)の色で直接塗るので、
+   変数では変えられない。部品の場所で狙って黒基調にする。 */
+
+/* 絵の後ろの明るいグレーのグラデーション → 背景と同じ色に */
+#root > div[style*="position: relative"] > div:first-child:empty {
+  background: var(--p-bg) !important;
+}
+/* 本物のキーボードと同じ明暗にする:
+     枠 #333 > ケース #262626→#1E1E1E > キーの天面 #1E1E1E 前後 > キーの斜面 #0A0A0A
+   斜面が天面より暗いと、キーが立って見える(光が上から当たっているように見える)。 */
+
+/* キーボードを囲む白い枠 */
+div[style*="pointer-events: all"][style*="position: absolute"] > div > div > div:first-child:empty {
+  background: #333333 !important;
+}
+/* ケース */
+div[style*="pointer-events: all"][style*="position: absolute"] > div > div > div:nth-child(2):empty {
+  background: linear-gradient(200deg, #262626 40%, #1E1E1E) !important;
+}
+/* キーの斜面(キーキャップの外側)。黒く塗って、下に影を落とす。 */
+div[style*="pointer-events: all"][style*="position: absolute"] > div > div:last-child > div > div {
+  background-color: #0A0A0A !important;
+  box-shadow: 0 2px 3px rgba(0, 0, 0, 0.5);
+}
+/* キーの天面と刻印。色を反転して、白い天面を暗いグレーに、黒い刻印を白っぽくする。
+   色を直接塗りつぶすと、選択中のキーの色分けまで消えるので、反転にしている。
+   hue-rotate で色相だけ元に戻すので、選択中の色は色味を保ったまま暗くなる。 */
+div[style*="pointer-events: all"][style*="position: absolute"] > div > div:last-child > div > div > div:has(> canvas) {
+  filter: invert(0.885) hue-rotate(180deg);
+}
+
+/* ---------- 左端のメニューに名前を出す ----------
+   アホの考えたフラットデザインはこのようにして無慈悲にラベルが表示されるのです。やめようね。
+
+   VIA の左端はアイコンだけで、マウスを乗せても名前が出ない。アイコンが何を指すかは
+   VIA の中身(JavaScript)から突き止めて、アイコンごとに名前を割り当てた:
+     本(data-icon="book")        … キーマップ(Design 画面では「定義ファイル」)
+     四角が四つ(独自の SVG)      … レイアウト
+     二重丸(独自の SVG)          … マクロ
+     電球(data-icon="lightbulb") … ライト
+     フロッピー(floppy-disk)      … 保存・読み込み
+     チップ(microchip)            … HHKB 設定(キーボード独自のメニューの既定アイコン)
+   独自の SVG は名前を持っていないので、図形の書き出し(path の d 属性)で見分けている。 */
+div[style^="pointer-events: all"]:has(span > svg) {
+  width: auto !important;
+  min-width: 150px;
+}
+div[style^="pointer-events: all"]:has(span > svg) * {
+  width: auto;
+}
+div[style^="pointer-events: all"] span:has(> svg) {
+  width: auto !important;
+  justify-content: flex-start !important;
+  white-space: nowrap;
+}
+div[style^="pointer-events: all"] span:has(> svg)::after {
+  margin-left: 10px;
+  font-size: 14px;
+}
+div[style^="pointer-events: all"] span:has(> svg[data-icon="book"])::after             { content: "キーマップ"; }
+div[style^="pointer-events: all"] span:has(> svg > path[d^="M3 13h8V3H3v10z"])::after  { content: "レイアウト"; }
+div[style^="pointer-events: all"] span:has(> svg > path[d^="M8.285 0a8.285"])::after   { content: "マクロ"; }
+div[style^="pointer-events: all"] span:has(> svg[data-icon="lightbulb"])::after        { content: "ライト"; }
+div[style^="pointer-events: all"] span:has(> svg[data-icon="floppy-disk"])::after      { content: "保存・読み込み"; }
+div[style^="pointer-events: all"] span:has(> svg[data-icon="microchip"])::after        { content: "HHKB 設定"; }
+
+}
+
+/* Design 画面の本のアイコンは、キーマップではなく定義ファイルの読み込み */
+@-moz-document regexp("https://(www\\.)?usevia\\.app/design.*") {
+  div[style^="pointer-events: all"] span:has(> svg[data-icon="book"])::after { content: "定義ファイル"; }
+}
+
+/* 今いる画面のアイコンだけは強調色の塗りの上に乗るので、強調色の上の文字色に戻す。
+   VIA は選択中かどうかを属性に出さないので、ページの URL で見分ける
+   (Stylus は画面の切り替えで URL が変わるとスタイルを当て直してくれる)。 */
+@-moz-document regexp("https://(www\\.)?usevia\\.app/?([?#].*)?") {
+  span[href="/"], span[href="/"]:hover { color: var(--p-on-accent) !important; }
+}
+@-moz-document regexp("https://(www\\.)?usevia\\.app/test.*") {
+  span[href="/test"], span[href="/test"]:hover { color: var(--p-on-accent) !important; }
+}
+@-moz-document regexp("https://(www\\.)?usevia\\.app/design.*") {
+  span[href="/design"], span[href="/design"]:hover { color: var(--p-on-accent) !important; }
+}
+@-moz-document regexp("https://(www\\.)?usevia\\.app/settings.*") {
+  span[href="/settings"], span[href="/settings"]:hover { color: var(--p-on-accent) !important; }
+}
