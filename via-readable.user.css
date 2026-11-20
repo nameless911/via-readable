@@ -1,7 +1,7 @@
 /* ==UserStyle==
 @name         VIA readable (Filer palette)
 @namespace    local
-@version      1.10.1
+@version      1.11.0
 @description  VIA の薄ピンクとフォントを、Filer の theme.py と同じ Win11 配色と UD フォントに置き換える。Windows のライト/ダークに追従。
 ==/UserStyle== */
 
@@ -69,9 +69,7 @@
   --p-text-dim:    #9A9A9A;  /* row_dim    : 非選択のラベル */
   --p-accent:      #4CC2FF;  /* tab_accent : 選択中・強調 */
   --p-on-accent:   #000000;  /* 強調色の上に乗る文字 */
-  /* 左端メニューの文字の明るさ(0〜255)。--p-text と --p-on-accent を数字で書いたもの */
-  --p-text-level:      232;
-  --p-on-accent-level: 0;
+  --p-sel:         #0F4C81;  /* sel_top    : 選択中の帯(メニュー) */
 }
 
 /* ---------- パレット:ライト(win11)。Windows がライトのときだけ ---------- */
@@ -86,8 +84,7 @@
     --p-text-dim:    #6A6A6A;
     --p-accent:      #0067C0;
     --p-on-accent:   #FFFFFF;
-    --p-text-level:      26;
-    --p-on-accent-level: 255;
+    --p-sel:         #CCE4F7;
   }
 }
 
@@ -103,11 +100,12 @@
   --bg_control:              var(--p-control) !important;
   --bg_control-highlighted:  var(--p-control-hi) !important;
   --bg_control_disabled:     var(--p-panel) !important;
-  --bg_icon:                 var(--p-text-dim) !important;
-  --bg_icon-highlighted:     var(--p-accent) !important;  /* 左端メニューの選択中(帯の色になる) */
+  --bg_icon:                 var(--p-sel) !important;     /* 2 列目のメニューの選択中の帯 */
+  --bg_icon-highlighted:     var(--p-sel) !important;     /* 左端メニューの選択中(帯の色になる) */
   --color_icon-idle:         transparent !important;      /* 左端メニューの非選択(帯なし) */
 
-  --color_label:             var(--p-text-dim) !important;
+  /* 項目名は本文と同じ明るさにする(薄いグレーは読みにくい) */
+  --color_label:             var(--p-text) !important;
   --color_label-highlighted: var(--p-text) !important;
   --color_control:           var(--p-text) !important;
   --color_control-disabled:  var(--p-text-dim) !important;
@@ -227,13 +225,11 @@ div[style^="pointer-events: all"] span:has(> svg)::after {
   font-size: 14px;
 }
 
-/* 選択中は Windows 2000 のメニューのように、強調色の帯で塗って文字を反転する。
+/* 選択中は Windows 2000 のメニューのように、帯で塗る。色は Filer と同じ選択色(--p-sel)。
    VIA は選択中かどうかを部品に書かず、文字色だけを変える
-   (選択中 = --bg_icon-highlighted、非選択 = --color_icon-idle)。そこで:
-     - 選択中の文字色を強調色、非選択を透明にしておき、
-     - 行の背景をその文字色(currentColor)で塗る → 選択中だけ青い帯になる
-     - アイコンと名前の色は、その色の「不透明度」から作り直す
-       (不透明 = 帯の上 → 反転色、透明 = 帯なし → 普通の文字色)
+   (選択中 = --bg_icon-highlighted、非選択 = --color_icon-idle)。そこで
+   選択中の文字色を選択色、非選択を透明にしておき、行の背景をその色(currentColor)で塗る。
+   → 選択中だけ帯になる。アイコンと名前は、どちらでも普通の文字色で描く。
    マウスを乗せた行も、Windows 2000 と同じく帯で示す。 */
 div[style^="pointer-events: all"] div:has(> span > svg) {
   background-color: currentColor !important;
@@ -242,14 +238,18 @@ div[style^="pointer-events: all"] div:has(> span > svg) {
   margin-bottom: 6px !important;
 }
 div[style^="pointer-events: all"] div:has(> span > svg):hover {
-  color: var(--p-accent) !important;
+  color: var(--p-sel) !important;
 }
 div[style^="pointer-events: all"] span:has(> svg) {
-  color: rgb(from currentColor
-    calc(var(--p-text-level) + (var(--p-on-accent-level) - var(--p-text-level)) * alpha)
-    calc(var(--p-text-level) + (var(--p-on-accent-level) - var(--p-text-level)) * alpha)
-    calc(var(--p-text-level) + (var(--p-on-accent-level) - var(--p-text-level)) * alpha)
-    / 1) !important;  /* 最後の「/ 1」で不透明にする。無いと元の透明さを引き継いで文字が消える */
+  color: var(--p-text) !important;
+}
+
+/* 2 列目のメニュー(基本/メディア…、読み取り/APC…)は、VIA が選択中を --bg_icon で塗るので、
+   上で --bg_icon を選択色にしてある。文字は --color_label-highlighted(= 本文の色)。
+
+   切り替えスイッチの「オフ」のつまみも --bg_icon で塗られるので、そこだけ元のグレーに戻す。 */
+label > input[type="checkbox"]:not(:checked) + span::before {
+  background-color: var(--p-text-dim) !important;
 }
 div[style^="pointer-events: all"] span:has(> svg[data-icon="book"])::after             { content: "キーマップ"; }
 div[style^="pointer-events: all"] span:has(> svg > path[d^="M3 13h8V3H3v10z"])::after  { content: "レイアウト"; }
