@@ -1,7 +1,7 @@
 /* ==UserStyle==
 @name         VIA readable (Filer palette)
 @namespace    local
-@version      1.10.0
+@version      1.10.1
 @description  VIA の薄ピンクとフォントを、Filer の theme.py と同じ Win11 配色と UD フォントに置き換える。Windows のライト/ダークに追従。
 ==/UserStyle== */
 
@@ -248,7 +248,8 @@ div[style^="pointer-events: all"] span:has(> svg) {
   color: rgb(from currentColor
     calc(var(--p-text-level) + (var(--p-on-accent-level) - var(--p-text-level)) * alpha)
     calc(var(--p-text-level) + (var(--p-on-accent-level) - var(--p-text-level)) * alpha)
-    calc(var(--p-text-level) + (var(--p-on-accent-level) - var(--p-text-level)) * alpha)) !important;
+    calc(var(--p-text-level) + (var(--p-on-accent-level) - var(--p-text-level)) * alpha)
+    / 1) !important;  /* 最後の「/ 1」で不透明にする。無いと元の透明さを引き継いで文字が消える */
 }
 div[style^="pointer-events: all"] span:has(> svg[data-icon="book"])::after             { content: "キーマップ"; }
 div[style^="pointer-events: all"] span:has(> svg > path[d^="M3 13h8V3H3v10z"])::after  { content: "レイアウト"; }
