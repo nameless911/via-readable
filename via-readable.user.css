@@ -1,7 +1,7 @@
 /* ==UserStyle==
 @name         VIA readable (Filer palette)
 @namespace    local
-@version      1.16.0
+@version      1.16.1
 @description  VIA の薄ピンクとフォントを、Filer の theme.py と同じ Win11 配色と UD フォントに置き換える。Windows のライト/ダークに追従。
 ==/UserStyle== */
 
@@ -190,7 +190,10 @@ div[style*="pointer-events: all"][style*="position: absolute"] > div > div > div
 }
 /* キーの斜面(キーキャップの外側)。黒く塗って、下に影を落とす。 */
 div[style*="pointer-events: all"][style*="position: absolute"] > div > div:last-child > div > div {
-  background-color: #0A0A0A !important;
+  /* 選択中(--sel = 1)は斜面も強調色に。天面より暗くして、キーが立って見えるのは保つ。 */
+  background-color: color-mix(in srgb,
+    color-mix(in srgb, var(--p-accent) 65%, #000) calc(var(--sel) * 100%),
+    #0A0A0A) !important;
   box-shadow: 0 2px 3px rgba(0, 0, 0, 0.5);
 }
 /* キーの天面と刻印。色を反転して、白い天面を暗いグレーに、黒い刻印を白っぽくする。
@@ -210,7 +213,7 @@ div[style*="pointer-events: all"][style*="position: absolute"] > div > div:last-
    選択中のキーにだけ「select-glow」という名前のアニメーションが付くので、
    同じ名前のアニメーションをここで定義し直して乗っ取る:
      - --sel を 1 にする(子要素の天面まで受け継がれる)→ 天面を強調色で塗る
-     - 外側に強調色の枠を付ける、明るさの脈打ちは止める
+     - 斜面も強調色(少し暗め)にする、明るさの脈打ちは止める
    縮める動きはやめる(全部のキーの transform を外す)。 */
 @property --sel {
   syntax: "<number>";
@@ -221,7 +224,6 @@ div[style*="pointer-events: all"][style*="position: absolute"] > div > div:last-
   from, to {
     --sel: 1;
     filter: none;
-    box-shadow: 0 0 0 2px var(--p-accent);
   }
 }
 div[style*="pointer-events: all"][style*="position: absolute"] > div > div:last-child > div > div {
