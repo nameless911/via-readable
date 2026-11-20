@@ -1,7 +1,7 @@
 /* ==UserStyle==
 @name         VIA readable
 @namespace    local
-@version      1.18.3
+@version      1.19.0
 @description  VIA の薄ピンクとフォントを、Filer の theme.py と同じ Win11 配色と UD フォントに置き換える。Windows のライト/ダークに追従。
 ==/UserStyle== */
 
@@ -154,19 +154,50 @@ span[href]:hover {
   color: var(--p-accent) !important;
 }
 
-/* 上端アイコンの吹き出し。日本語にすると「設定」が二つ並んで区別がつかないので、
-   言語に関係なく、何の画面か分かる名前に差し替える。 */
-span[href] .tooltip > div:first-child {
-  font-size: 0 !important;
+/* 上端アイコンの吹き出し。
+   VIA はマウスを乗せると、名前の吹き出しをびよんと拡大しながら出す。うざいし、そもそも要らない。
+   名前は最初から見えていればいいので、吹き出しは消して、アイコンの下に常に名前を貼る。
+   クソ UI の家電に容赦なく貼られるテプラと同じ発想(白いテープに黒い太字)。
+   帯の高さ(50px)に収まるように、アイコンは 22px、テープは 11px にしている。
+   日本語にすると「設定」が二つ並んで区別がつかないので、何の画面か分かる名前にしてある。 */
+span[href] .tooltip {
+  display: none !important;
 }
-span[href] .tooltip > div:first-child::after {
-  font-size: 16px;
+div:has(> span[href="/settings"]) {
+  height: 50px !important;
+  box-sizing: border-box !important;
+  padding-top: 3px !important;
+  padding-bottom: 3px !important;
+  align-items: flex-start !important;
+}
+span[href] {
+  height: auto !important;
+  width: auto !important;
+  min-width: 64px;
+  flex-direction: column !important;
+  gap: 2px;
+  padding: 3px 6px 2px !important;
+  border-radius: 6px !important;
+}
+span[href] > svg {
+  height: 22px !important;
+  width: auto !important;
+}
+span[href]::after {
+  font-size: 11px;
+  line-height: 14px;
+  padding: 1px 5px;
+  background: #E8E8E8;
+  color: #000;
+  font-weight: 700;
+  letter-spacing: 0.05em;
   white-space: nowrap;
+  border-radius: 1px;
 }
-span[href="/"]         .tooltip > div:first-child::after { content: "キー配列"; }
-span[href="/test"]     .tooltip > div:first-child::after { content: "キーテスト"; }
-span[href="/design"]   .tooltip > div:first-child::after { content: "定義ファイル"; }
-span[href="/settings"] .tooltip > div:first-child::after { content: "VIA の設定"; }
+span[href="/"]::after         { content: "キー配列"; }
+span[href="/test"]::after     { content: "キーテスト"; }
+span[href="/design"]::after   { content: "定義ファイル"; }
+span[href="/settings"]::after { content: "VIA の設定"; }
 
 /* ---------- キーボードの絵 ----------
    VIA はキーボードの絵を、選んだテーマ(既定は白いキーキャップ)の色で直接塗るので、
