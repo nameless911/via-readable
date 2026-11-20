@@ -1,7 +1,7 @@
 /* ==UserStyle==
 @name         VIA readable (Filer palette)
 @namespace    local
-@version      1.11.0
+@version      1.12.0
 @description  VIA の薄ピンクとフォントを、Filer の theme.py と同じ Win11 配色と UD フォントに置き換える。Windows のライト/ダークに追従。
 ==/UserStyle== */
 
@@ -250,6 +250,25 @@ div[style^="pointer-events: all"] span:has(> svg) {
    切り替えスイッチの「オフ」のつまみも --bg_icon で塗られるので、そこだけ元のグレーに戻す。 */
 label > input[type="checkbox"]:not(:checked) + span::before {
   background-color: var(--p-text-dim) !important;
+}
+
+/* 2 列目のメニューを左端と同じ見た目にそろえる。
+   VIA の元は 20px・全部大文字・角の丸い札。左端と同じ 14px・そのままの綴り・四角い帯にする。
+   場所は「左端のメニューのすぐ隣の列」の、そのまた中の行(左端 + 列 > 一覧 > 行)。 */
+div[style^="pointer-events: all"] + div > div > div {
+  font-size: 14px !important;
+  line-height: 20px !important;
+  text-transform: none !important;
+  border-radius: 0 !important;
+  border-left: 0 !important;
+  padding: 2px 10px !important;
+  margin-bottom: 6px !important;
+  min-width: 0 !important;
+  align-self: stretch !important;
+}
+div[style^="pointer-events: all"] + div > div > div:hover {
+  background: var(--p-sel) !important;
+  color: var(--p-text) !important;
 }
 div[style^="pointer-events: all"] span:has(> svg[data-icon="book"])::after             { content: "キーマップ"; }
 div[style^="pointer-events: all"] span:has(> svg > path[d^="M3 13h8V3H3v10z"])::after  { content: "レイアウト"; }
