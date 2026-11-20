@@ -1,7 +1,7 @@
 /* ==UserStyle==
 @name         VIA readable
 @namespace    local
-@version      1.21.3
+@version      1.21.4
 @description  VIA の薄ピンクとフォントを、Filer の theme.py と同じ Win11 配色と UD フォントに置き換える。Windows のライト/ダークに追従。
 ==/UserStyle== */
 
@@ -446,8 +446,21 @@ div[style^="pointer-events: all"] + div:last-child > div > div {
 div[style^="pointer-events: all"] + div:not(:last-child) + div > div > div > div:has(> label) {
   font-size: 15px !important;
   line-height: 24px !important;
-  min-height: 44px !important;
+  /* 縦のピッチを左の 2 列(32px)に合わせる。仕切り線(border-bottom)は残す */
+  min-height: 32px !important;
+  height: 32px !important;
+  box-sizing: border-box !important;
   align-items: center !important;
+}
+/* 32px の行に収まるように、操作部品(スイッチ・ドロップダウン・スライダー)を少し縮める */
+div[style^="pointer-events: all"] + div:not(:last-child) + div > div > div > div:has(> label) > :last-child:has(input, svg) {
+  transform: scale(0.78);
+  transform-origin: right center;
+}
+/* 左端と 2 列目のメニューの上の隙間をなくして、右の行と高さをそろえる */
+div[style^="pointer-events: all"] > div:has(span > svg),
+div[style^="pointer-events: all"] + div:not(:last-child) > div {
+  padding-top: 0 !important;
 }
 div[style^="pointer-events: all"] + div:not(:last-child) + div > div > div > div:has(> label) *:not(svg):not(svg *) {
   font-size: 15px !important;
