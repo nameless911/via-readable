@@ -1,7 +1,7 @@
 /* ==UserStyle==
 @name         VIA readable
 @namespace    local
-@version      1.19.2
+@version      1.19.4
 @description  VIA の薄ピンクとフォントを、Filer の theme.py と同じ Win11 配色と UD フォントに置き換える。Windows のライト/ダークに追従。
 ==/UserStyle== */
 
@@ -421,8 +421,11 @@ div[style^="pointer-events: all"] span:has(> svg[data-icon="microchip"])::after 
 div[style^="pointer-events: all"] span:has(> svg[data-icon="circle-question"])::after  { content: "キーテスト"; }
 
 /* 項目が 1 つしかない画面(キーテスト・定義ファイル・VIA の設定)では、左端の列は要らないので畳む。
-   display: none にすると、並びの枠(grid)の 1 列目に中身が押し込まれて崩れるので、幅 0 にする。 */
-div[style^="pointer-events: all"]:has(> div > div:only-child) {
+   display: none にすると、並びの枠(grid)の 1 列目に中身が押し込まれて崩れるので、幅 0 にする。
+   キーボードの絵のキーを並べる入れ物も style が「pointer-events: all」で始まるので、
+   アイコン(span > svg)を持つ行が 1 つだけ、という条件で左端の列だけに絞る。
+   (絞らないと、キーの入れ物まで幅 0 に畳まれて、キーが全部消える。) */
+div[style^="pointer-events: all"]:has(> div > div:only-child > span > svg) {
   width: 0 !important;
   min-width: 0 !important;
   padding: 0 !important;
