@@ -1,7 +1,7 @@
 /* ==UserStyle==
 @name         VIA readable
 @namespace    local
-@version      1.24.1
+@version      1.24.2
 @description  VIA の薄ピンクとフォントを、Filer の theme.py と同じ Win11 配色と UD フォントに置き換える。Windows のライト/ダークに追従。
 ==/UserStyle== */
 
@@ -466,8 +466,13 @@ div[style^="pointer-events: all"] + div:last-child > div > div:has(> label) butt
   box-sizing: border-box !important;
   margin: 0 !important;
 }
+/* 行は画面の横幅いっぱいに伸ばす(下の「設定行」と同じ) */
 div[style^="pointer-events: all"] + div:last-child > div:has(> div > label) {
-  align-items: flex-start !important;  /* 左寄せ */
+  align-items: stretch !important;
+}
+div[style^="pointer-events: all"] + div:last-child > div > div:has(> label) {
+  width: auto !important;
+  max-width: none !important;
 }
 /* 設定行(項目名と操作部品)。HHKB・レイアウト・保存/読み込みなど、項目名(label)を持つ行は全部同じ見た目にする。
    VIA の元は 20px・行の高さ 50px で間延びしている。左の 2 列(32px)とピッチを合わせる。
@@ -487,10 +492,15 @@ div[style^="pointer-events: all"] ~ div:last-child > div > div > div:has(> label
   font-size: 15px !important;
   line-height: 24px !important;
 }
-/* 行の並びは左寄せ。VIA は幅 960px の行を真ん中に置くので、2 列目が無い画面だと左に変な隙間ができる。 */
+/* 行は画面の横幅いっぱいに伸ばす。VIA は幅 960px の行を真ん中に置くので、2 列目が無い画面だと左に隙間ができ、
+   左寄せにしただけだと、画面を広げたときに右ががら空きになる(項目名と操作部品が遠く離れる以前に、操作部品が真ん中で止まる)。 */
 div[style^="pointer-events: all"] ~ div:last-child > div > div:has(> div > label) {
-  align-items: flex-start !important;
+  align-items: stretch !important;
   min-height: 0 !important;
+}
+div[style^="pointer-events: all"] ~ div:last-child > div > div > div:has(> label) {
+  width: auto !important;
+  max-width: none !important;
 }
 /* 32px の行に収まるように、操作部品(スイッチ・ドロップダウン・スライダー)を少し縮める。
    押しボタンは下で別に高さを決めるので縮めない(保存/読み込みのボタンの大きさがそろわなくなる)。 */
@@ -522,36 +532,53 @@ div[style^="pointer-events: all"] ~ div:last-child > div > div > div:has(> label
 div[style^="pointer-events: all"] + div:last-child > div > div:has(> label) > :last-child:has(svg):not(:has(input[type="checkbox"], input[type="range"], button)) {
   transform: none !important;
 }
-div[style^="pointer-events: all"] ~ div:last-child > div > div > div:has(> label) > :last-child:has(svg):not(:has(input[type="checkbox"], input[type="range"], button)) > div > div:last-child,
-div[style^="pointer-events: all"] + div:last-child > div > div:has(> label) > :last-child:has(svg):not(:has(input[type="checkbox"], input[type="range"], button)) > div > div:last-child {
+div[style^="pointer-events: all"] ~ div:last-child > div > div > div:has(> label) > :last-child:has(svg):not(:has(input[type="checkbox"], input[type="range"], button)) > div > div:has(input),
+div[style^="pointer-events: all"] + div:last-child > div > div:has(> label) > :last-child:has(svg):not(:has(input[type="checkbox"], input[type="range"], button)) > div > div:has(input) {
   min-height: 26px !important;
   height: 26px !important;
   box-sizing: border-box !important;
   border-radius: 3px !important;
 }
-div[style^="pointer-events: all"] ~ div:last-child > div > div > div:has(> label) > :last-child:has(svg):not(:has(input[type="checkbox"], input[type="range"], button)) > div > div:last-child > div,
-div[style^="pointer-events: all"] + div:last-child > div > div:has(> label) > :last-child:has(svg):not(:has(input[type="checkbox"], input[type="range"], button)) > div > div:last-child > div {
+div[style^="pointer-events: all"] ~ div:last-child > div > div > div:has(> label) > :last-child:has(svg):not(:has(input[type="checkbox"], input[type="range"], button)) > div > div:has(input) > div,
+div[style^="pointer-events: all"] + div:last-child > div > div:has(> label) > :last-child:has(svg):not(:has(input[type="checkbox"], input[type="range"], button)) > div > div:has(input) > div {
   height: 24px !important;
   min-height: 0 !important;
   padding-top: 0 !important;
   padding-bottom: 0 !important;
   align-items: center !important;
 }
-div[style^="pointer-events: all"] ~ div:last-child > div > div > div:has(> label) > :last-child:has(svg):not(:has(input[type="checkbox"], input[type="range"], button)) > div > div:last-child > div > div,
-div[style^="pointer-events: all"] + div:last-child > div > div:has(> label) > :last-child:has(svg):not(:has(input[type="checkbox"], input[type="range"], button)) > div > div:last-child > div > div {
+div[style^="pointer-events: all"] ~ div:last-child > div > div > div:has(> label) > :last-child:has(svg):not(:has(input[type="checkbox"], input[type="range"], button)) > div > div:has(input) > div > div,
+div[style^="pointer-events: all"] + div:last-child > div > div:has(> label) > :last-child:has(svg):not(:has(input[type="checkbox"], input[type="range"], button)) > div > div:has(input) > div > div {
   margin: 0 !important;
   padding-top: 0 !important;
   padding-bottom: 0 !important;
   font-size: 14px !important;
   line-height: 20px !important;
 }
-div[style^="pointer-events: all"] ~ div:last-child > div > div > div:has(> label) > :last-child:has(svg):not(:has(input[type="checkbox"], input[type="range"], button)) > div > div:last-child > div:last-child > div,
-div[style^="pointer-events: all"] + div:last-child > div > div:has(> label) > :last-child:has(svg):not(:has(input[type="checkbox"], input[type="range"], button)) > div > div:last-child > div:last-child > div {
+div[style^="pointer-events: all"] ~ div:last-child > div > div > div:has(> label) > :last-child:has(svg):not(:has(input[type="checkbox"], input[type="range"], button)) > div > div:has(input) > div:last-child > div,
+div[style^="pointer-events: all"] + div:last-child > div > div:has(> label) > :last-child:has(svg):not(:has(input[type="checkbox"], input[type="range"], button)) > div > div:has(input) > div:last-child > div {
   padding: 0 6px !important;
 }
 div[style^="pointer-events: all"] ~ div:last-child > div > div > div:has(> label) > :last-child:has(svg):not(:has(input[type="checkbox"], input[type="range"], button)) input,
 div[style^="pointer-events: all"] + div:last-child > div > div:has(> label) > :last-child:has(svg):not(:has(input[type="checkbox"], input[type="range"], button)) input {
   height: 20px !important;
+}
+
+/* 矢印の左の縦線(区切り)。枠を低くしたぶん、線も短くして真ん中に置く */
+div[style^="pointer-events: all"] ~ div:last-child > div > div > div:has(> label) > :last-child:has(svg):not(:has(input[type="checkbox"], input[type="range"], button)) > div > div:has(input) > div:last-child > span,
+div[style^="pointer-events: all"] + div:last-child > div > div:has(> label) > :last-child:has(svg):not(:has(input[type="checkbox"], input[type="range"], button)) > div > div:has(input) > div:last-child > span,
+#root div:has(> button):not(:has(pre)):has(> div) > div:first-child > div:has(input) > div:last-child > span {
+  height: 16px !important;
+  margin: 0 !important;
+  align-self: center !important;
+}
+/* 開いたときの選択肢。1 行 28px・14px の文字(メニューの行と同じ詰め具合) */
+div[style^="pointer-events: all"] ~ div:last-child > div > div > div:has(> label) > :last-child:has(svg):not(:has(input[type="checkbox"], input[type="range"], button)) > div > div:not(:has(input)):not(span) > div > div,
+div[style^="pointer-events: all"] + div:last-child > div > div:has(> label) > :last-child:has(svg):not(:has(input[type="checkbox"], input[type="range"], button)) > div > div:not(:has(input)):not(span) > div > div,
+#root div:has(> button):not(:has(pre)):has(> div) > div:first-child > div:not(:has(input)):not(span) > div > div {
+  padding: 4px 10px !important;
+  font-size: 14px !important;
+  line-height: 20px !important;
 }
 
 /* マウスを乗せると出る吹き出し(画面のいちばん外に置かれる版)。
@@ -578,10 +605,14 @@ span:has(> svg[data-icon="code"]) {
   display: inline-flex !important;
   align-items: center !important;
 }
-/* 並びは左寄せ(真ん中寄せだと左に隙間ができる) */
+/* 並びは横幅いっぱい(真ん中寄せだと左に、左寄せだと右に隙間ができる) */
 div[style^="pointer-events: all"] ~ div:last-child > div > div:has(svg[data-icon="clapperboard"]) {
-  align-items: flex-start !important;
+  align-items: stretch !important;
   padding-top: 0 !important;
+}
+div[style^="pointer-events: all"] ~ div:last-child > div > div:has(svg[data-icon="clapperboard"]) > div {
+  width: auto !important;
+  max-width: none !important;
 }
 div[style^="pointer-events: all"] ~ div:last-child > div > div:has(svg[data-icon="clapperboard"]) > div:has(svg[data-icon="clapperboard"]) {
   justify-content: flex-start !important;
@@ -903,28 +934,28 @@ div:has(> :nth-child(108)):not(:has(> :nth-child(109))):not(:has(canvas)) {
   }
   /* 端末の選択。設定行のドロップダウンと同じ 26px・14px にして、名前(HHKB Pro Classic PD-KB401B (0xCAFE:0x4014))が切れない幅にする。
      ここは入れ物そのものが react-select なので、設定行より 1 段浅い。 */
-  #root div:has(> button):not(:has(pre)):has(> div) > div:first-child > div:last-child {
+  #root div:has(> button):not(:has(pre)):has(> div) > div:first-child > div:has(input) {
     min-height: 26px !important;
     height: 26px !important;
     width: 440px !important;
     box-sizing: border-box !important;
     border-radius: 3px !important;
   }
-  #root div:has(> button):not(:has(pre)):has(> div) > div:first-child > div:last-child > div {
+  #root div:has(> button):not(:has(pre)):has(> div) > div:first-child > div:has(input) > div {
     height: 24px !important;
     min-height: 0 !important;
     padding-top: 0 !important;
     padding-bottom: 0 !important;
     align-items: center !important;
   }
-  #root div:has(> button):not(:has(pre)):has(> div) > div:first-child > div:last-child > div > div {
+  #root div:has(> button):not(:has(pre)):has(> div) > div:first-child > div:has(input) > div > div {
     margin: 0 !important;
     padding-top: 0 !important;
     padding-bottom: 0 !important;
     font-size: 14px !important;
     line-height: 20px !important;
   }
-  #root div:has(> button):not(:has(pre)):has(> div) > div:first-child > div:last-child > div:last-child > div {
+  #root div:has(> button):not(:has(pre)):has(> div) > div:first-child > div:has(input) > div:last-child > div {
     padding: 0 6px !important;
   }
   #root div:has(> button):not(:has(pre)):has(> div) > div:first-child input {
