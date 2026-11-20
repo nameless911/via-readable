@@ -1,7 +1,7 @@
 /* ==UserStyle==
 @name         VIA readable
 @namespace    local
-@version      1.20.2
+@version      1.21.2
 @description  VIA の薄ピンクとフォントを、Filer の theme.py と同じ Win11 配色と UD フォントに置き換える。Windows のライト/ダークに追従。
 ==/UserStyle== */
 
@@ -464,8 +464,8 @@ label:has(> svg[data-icon="angle-down"]) {
 
 /* ---------- レイヤーの切り替え ----------
    元は左上に「レイヤー 0 1 2 3」と数字が並ぶだけで、押せる物に見えない。
-   キーボードの左下に移して、ボタンの形にし、DMK での役割を添える。
-     0 = 普段の配列 / 1 = Fn を押している間 / 2・3 = System 2 の普段と Fn */
+   キーボードの左下に移して、ボタンの形にする。
+   (名前を付ける案もあったが、VIA にもキーボードにもレイヤー名が無く、CSS でやることではないのでやめた) */
 div:has(> label + button + button + button + button) {
   top: auto !important;
   bottom: 14px !important;
@@ -487,10 +487,6 @@ div:has(> label + button + button + button + button) > button {
   border-radius: 4px !important;
   margin: 0 !important;
 }
-div:has(> label + button + button + button + button) > button:nth-of-type(1)::after { content: " 標準"; }
-div:has(> label + button + button + button + button) > button:nth-of-type(2)::after { content: " Fn"; }
-div:has(> label + button + button + button + button) > button:nth-of-type(3)::after { content: " S2 標準"; }
-div:has(> label + button + button + button + button) > button:nth-of-type(4)::after { content: " S2 Fn"; }
 
 /* ---------- キーコードの一覧(基本)を ANSI の並びにする ----------
    VIA は A〜Z、数字、記号…と五十音表のように並べるので、目的のキーを探すのに時間がかかる。
