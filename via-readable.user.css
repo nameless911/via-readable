@@ -1,7 +1,7 @@
 /* ==UserStyle==
 @name         VIA readable
 @namespace    local
-@version      1.25.0
+@version      1.26.0
 @description  VIA の薄ピンクとフォントを、Filer の theme.py と同じ Win11 配色と UD フォントに置き換える。Windows のライト/ダークに追従。
 ==/UserStyle== */
 
@@ -579,6 +579,15 @@ div[style^="pointer-events: all"] + div:last-child > div > div:has(> label) > :l
   padding: 4px 10px !important;
   font-size: 14px !important;
   line-height: 20px !important;
+}
+
+/* マウスを乗せた設定行は、行ごと強調色を薄く敷く(左のメニューと同じ考え方)。
+   行が横に長すぎて、項目名と右端の操作部品が同じ行かどうか、目で追うのがしんどいため。
+   左のメニューは 35% だが、ここは行の中に強調色の文字(値の説明など)があるので 25% に抑える。
+   35% だと強調色の文字とのコントラストが 4.0:1 まで落ちる。25% なら約 5.2:1。 */
+div[style^="pointer-events: all"] ~ div:last-child > div > div > div:has(> label):hover,
+div[style^="pointer-events: all"] + div:last-child > div > div:has(> label):hover {
+  background-color: rgb(from var(--p-sel) r g b / 0.25) !important;
 }
 
 /* マウスを乗せると出る吹き出し(画面のいちばん外に置かれる版)。
