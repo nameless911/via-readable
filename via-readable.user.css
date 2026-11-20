@@ -1,7 +1,7 @@
 /* ==UserStyle==
 @name         VIA readable (Filer palette)
 @namespace    local
-@version      1.14.0
+@version      1.15.0
 @description  VIA の薄ピンクとフォントを、Filer の theme.py と同じ Win11 配色と UD フォントに置き換える。Windows のライト/ダークに追従。
 ==/UserStyle== */
 
@@ -104,7 +104,7 @@
   --bg_control:              var(--p-control) !important;
   --bg_control-highlighted:  var(--p-control-hi) !important;
   --bg_control_disabled:     var(--p-panel) !important;
-  --bg_icon:                 var(--p-sel) !important;     /* 2 列目のメニューの選択中の帯 */
+  --bg_icon:                 var(--p-text-dim) !important;
   --bg_icon-highlighted:     var(--p-sel) !important;     /* 左端メニューの選択中(帯の色になる) */
   --color_icon-idle:         transparent !important;      /* 左端メニューの非選択(帯なし) */
 
@@ -233,8 +233,10 @@ div[style^="pointer-events: all"] span:has(> svg)::after {
    VIA は選択中かどうかを部品に書かず、文字色だけを変える
    (選択中 = --bg_icon-highlighted、非選択 = --color_icon-idle)。そこで
    選択中の文字色を選択色、非選択を透明にしておき、行の背景をその色(currentColor)で塗る。
-   → 選択中だけ帯になる。アイコンと名前は、どちらでも普通の文字色で描く。
-   マウスを乗せた行も、Windows 2000 と同じく帯で示す。 */
+   → 選択中だけ帯になる。
+   マウスを乗せた行は、強調色を薄く(35%)敷いて、選択中の帯と見分けられるようにする。
+   VIA はマウスを乗せると文字色を --color_label-highlighted に変えるので、
+   この列の中だけ、その変数を薄い強調色にしておく。 */
 div[style^="pointer-events: all"] div:has(> span > svg) {
   background-color: currentColor !important;
   border-radius: 0 !important;
@@ -250,23 +252,24 @@ div[style^="pointer-events: all"] > div:has(span > svg) {
   padding-left: 0 !important;
   padding-right: 0 !important;
 }
+div[style^="pointer-events: all"]:has(span > svg) {
+  --color_label-highlighted: rgb(from var(--p-sel) r g b / 0.35) !important;
+}
 div[style^="pointer-events: all"] div:has(> span > svg):hover {
-  color: var(--p-sel) !important;
+  color: rgb(from var(--p-sel) r g b / 0.35) !important;
 }
 div[style^="pointer-events: all"] span:has(> svg) {
-  /* 帯の上(行の色が不透明)なら強調色の上の文字色、帯なし(透明)なら普通の文字色。
+  /* 濃い帯の上(行の色がほぼ不透明)なら強調色の上の文字色、それ以外(透明・薄い帯)なら普通の文字色。
+     clamp で「不透明度 0.5 未満は普通の文字色」に切り分けている。
      最後の「/ 1」で不透明にする。無いと元の透明さを引き継いで文字が消える。 */
   color: rgb(from currentColor
-    calc(var(--p-text-level) + (var(--p-on-accent-level) - var(--p-text-level)) * alpha)
-    calc(var(--p-text-level) + (var(--p-on-accent-level) - var(--p-text-level)) * alpha)
-    calc(var(--p-text-level) + (var(--p-on-accent-level) - var(--p-text-level)) * alpha)
+    calc(var(--p-text-level) + (var(--p-on-accent-level) - var(--p-text-level)) * clamp(0, (alpha - 0.5) * 2, 1))
+    calc(var(--p-text-level) + (var(--p-on-accent-level) - var(--p-text-level)) * clamp(0, (alpha - 0.5) * 2, 1))
+    calc(var(--p-text-level) + (var(--p-on-accent-level) - var(--p-text-level)) * clamp(0, (alpha - 0.5) * 2, 1))
     / 1) !important;
 }
 
-/* 2 列目のメニュー(基本/メディア…、読み取り/APC…)は、VIA が選択中を --bg_icon で塗るので、
-   上で --bg_icon を選択色にしてある。文字は --color_label-highlighted(= 本文の色)。
-
-   切り替えスイッチの「オフ」のつまみも --bg_icon で塗られるので、そこだけ元のグレーに戻す。 */
+/* 切り替えスイッチの「オフ」のつまみは --bg_icon で塗られる。グレーに固定しておく。 */
 label > input[type="checkbox"]:not(:checked) + span::before {
   background-color: var(--p-text-dim) !important;
 }
@@ -289,14 +292,30 @@ div[style^="pointer-events: all"] + div > div {
   padding-left: 0 !important;
   padding-right: 0 !important;
 }
-div[style^="pointer-events: all"] + div > div > div:hover {
-  background: var(--p-sel) !important;
-  color: var(--p-on-accent) !important;
+/* 2 列目の選択中と文字色。
+   VIA はこの列の選択中を「背景 = --bg_icon」でだけ示し、文字色はマウスを乗せたときと同じになる。
+   なので、背景の重ね塗りで見分ける:
+     - 背景を 2 枚重ねにして、1 枚目は文字の形に切り抜き(text)、2 枚目は行全体(border-box)に敷く
+     - 選択中の行: --bg_icon = 「強調色の上の文字色」+「強調色」 → 強調色の帯に反転した文字
+     - それ以外の行: 親の列から背景を受け継ぐ = 「本文の色」+「透明」 → 帯なしで普通の文字
+     - 列そのものは文字を持たないので、同じ背景を敷いても見えない
+   文字色(color)は塗りに使わないので、マウスを乗せても選択中のようには見えない。
+   マウスを乗せた行には、強調色を薄く(35%)重ねる(左端と同じ)。 */
+div[style^="pointer-events: all"] + div > div {
+  --bg_icon: linear-gradient(var(--p-on-accent), var(--p-on-accent)),
+             linear-gradient(var(--p-sel), var(--p-sel)) !important;
+  background: linear-gradient(var(--p-text), var(--p-text)),
+              linear-gradient(transparent, transparent) !important;
+  -webkit-background-clip: text, border-box !important;
+  background-clip: text, border-box !important;
 }
-/* 2 列目の選択中の文字は --color_label-highlighted で描かれる。この列の中だけ、
-   強調色の上の文字色に差し替える(列の外では本文の色のまま)。 */
-div[style^="pointer-events: all"] + div {
-  --color_label-highlighted: var(--p-on-accent) !important;
+div[style^="pointer-events: all"] + div > div > div {
+  -webkit-background-clip: text, border-box !important;
+  background-clip: text, border-box !important;
+  -webkit-text-fill-color: transparent !important;
+}
+div[style^="pointer-events: all"] + div > div > div:hover {
+  box-shadow: inset 0 0 0 100px rgb(from var(--p-sel) r g b / 0.35) !important;
 }
 /* 左端と 2 列目の行の高さをそろえて、横に並んだ行の位置を合わせる */
 div[style^="pointer-events: all"] div:has(> span > svg),
