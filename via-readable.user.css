@@ -1,7 +1,7 @@
 /* ==UserStyle==
 @name         VIA readable
 @namespace    local
-@version      1.18.2
+@version      1.18.3
 @description  VIA の薄ピンクとフォントを、Filer の theme.py と同じ Win11 配色と UD フォントに置き換える。Windows のライト/ダークに追従。
 ==/UserStyle== */
 
@@ -235,16 +235,16 @@ div[style*="pointer-events: all"][style*="position: absolute"] > div > div:last-
      押したことがある(履歴) … 板の不透明度 0.4
      まだ押していない     … 板の不透明度 0
    板は隠して、いま押しているキーは選択中のキーと同じ強調色の塗り(--sel = 1)にする。
-   履歴のほうは藍色に白い刻印。強調色より暗く沈ませて、いま押しているキーと見分ける。 */
+   履歴のほうは強調色の明るさを落とした色に白い刻印。暗く沈ませて、いま押しているキーと見分ける。 */
 div[style*="pointer-events: all"][style*="position: absolute"] > div > div:last-child > div > div:has(> div[style*="opacity: 0.6"]) {
   --sel: 1;
 }
 div[style*="pointer-events: all"][style*="position: absolute"] > div > div:last-child > div > div:has(> div[style*="opacity: 0.4"]) {
-  background-color: #16264A !important;  /* 斜面:濃い藍 */
+  background-color: color-mix(in srgb, var(--p-accent) 30%, #000) !important;  /* 斜面:さらに暗く */
 }
 div[style*="pointer-events: all"][style*="position: absolute"] > div > div:last-child > div > div:has(> div[style*="opacity: 0.4"]) > div:has(> canvas) {
   filter: none !important;
-  background-color: #2B4B8C !important;  /* 天面:藍色。白い刻印とのコントラスト 8:1 程度 */
+  background-color: color-mix(in srgb, var(--p-accent) 55%, #000) !important;  /* 天面:強調色を暗く。白い刻印と 5:1 程度 */
 }
 div[style*="pointer-events: all"][style*="position: absolute"] > div > div:last-child > div > div:has(> div[style*="opacity: 0.4"]) > div:has(> canvas) > canvas {
   filter: invert(1);  /* 黒い刻印を白に */
