@@ -1,7 +1,7 @@
 /* ==UserStyle==
 @name         VIA readable
 @namespace    local
-@version      1.22.0
+@version      1.23.0
 @description  VIA の薄ピンクとフォントを、Filer の theme.py と同じ Win11 配色と UD フォントに置き換える。Windows のライト/ダークに追従。
 ==/UserStyle== */
 
@@ -446,25 +446,37 @@ div[style^="pointer-events: all"] + div:last-child > div > div {
   min-height: 44px !important;
   align-items: center !important;
 }
-/* 2 列目がある画面(HHKB など)の設定行も同じ大きさにする。
-   3 列目の中の、項目名(label)を持つ行だけ。キーコードの一覧(ボタン)には当てない。
+/* 設定行(項目名と操作部品)。HHKB・レイアウト・保存/読み込みなど、項目名(label)を持つ行は全部同じ見た目にする。
+   VIA の元は 20px・行の高さ 50px で間延びしている。左の 2 列(32px)とピッチを合わせる。
+   場所は「左端の列より後ろの、いちばん最後の列」の中の行。2 列目(HHKB の Scan Rate など)があってもなくても、
+   中身はいちばん最後の列に入っている。キーコードの一覧(ボタン)は label を持たないので当たらない。
    行の中の操作部品(ドロップダウンの文字など)も 20px のままだと浮くので、そろえる。 */
-div[style^="pointer-events: all"] + div:not(:last-child) + div > div > div > div:has(> label) {
+div[style^="pointer-events: all"] ~ div:last-child > div > div > div:has(> label) {
   font-size: 15px !important;
   line-height: 24px !important;
-  /* 縦のピッチを左の 2 列(32px)に合わせる。仕切り線(border-bottom)は残す */
+  /* 仕切り線(border-bottom)は残す */
   min-height: 32px !important;
   height: 32px !important;
   box-sizing: border-box !important;
   align-items: center !important;
 }
-/* 32px の行に収まるように、操作部品(スイッチ・ドロップダウン・スライダー)を少し縮める */
-div[style^="pointer-events: all"] + div:not(:last-child) + div > div > div > div:has(> label) > :last-child:has(input, svg) {
+div[style^="pointer-events: all"] ~ div:last-child > div > div > div:has(> label) *:not(svg):not(svg *) {
+  font-size: 15px !important;
+  line-height: 24px !important;
+}
+/* 行の並びは左寄せ。VIA は幅 960px の行を真ん中に置くので、2 列目が無い画面だと左に変な隙間ができる。 */
+div[style^="pointer-events: all"] ~ div:last-child > div > div:has(> div > label) {
+  align-items: flex-start !important;
+  min-height: 0 !important;
+}
+/* 32px の行に収まるように、操作部品(スイッチ・ドロップダウン・スライダー)を少し縮める。
+   押しボタンは下で別に高さを決めるので縮めない(保存/読み込みのボタンの大きさがそろわなくなる)。 */
+div[style^="pointer-events: all"] ~ div:last-child > div > div > div:has(> label) > :last-child:has(input, svg):not(:has(button)) {
   transform: scale(0.78);
   transform-origin: right center;
 }
-/* 押しボタン(Start calibration の「クリック」など)も 32px の行に収める */
-div[style^="pointer-events: all"] + div:not(:last-child) + div > div > div > div:has(> label) button {
+/* 押しボタン(Start calibration の「クリック」、保存、読み込みなど)も 32px の行に収める */
+div[style^="pointer-events: all"] ~ div:last-child > div > div > div:has(> label) button {
   height: 24px !important;
   min-height: 0 !important;
   line-height: 22px !important;
@@ -478,8 +490,107 @@ div[style^="pointer-events: all"] > div:has(span > svg),
 div[style^="pointer-events: all"] + div:not(:last-child) > div {
   padding-top: 0 !important;
 }
-div[style^="pointer-events: all"] + div:not(:last-child) + div > div > div > div:has(> label) *:not(svg):not(svg *) {
-  font-size: 15px !important;
+
+/* マウスを乗せると出る吹き出し(画面のいちばん外に置かれる版)。
+   新しい VIA は左端のメニューの名前などを、body 直下の position: fixed の箱で出す。名前はもう横に書いてあるので消す。 */
+body > div[style*="position: fixed"][style*="pointer-events: none"][style*="z-index: 10000"] {
+  display: none !important;
+}
+
+/* ---------- マクロ ----------
+   アイコンしかないボタンが 6 個並ぶ。何のボタンか知る方法は、マウスを乗せて吹き出しを待つことだけ。
+   上の 2 つ(作り方の切り替え)には名前を書き、下の 4 つ(録音の操作)は VIA が隠し持っている
+   吹き出しの文字(.tooltip)を、アイコンの右にそのまま出す。VIA の訳がそのまま使える。 */
+span:has(> svg[data-icon="clapperboard"])::after { content: "録音で作る"; }
+span:has(> svg[data-icon="code"])::after         { content: "スクリプトで書く"; }
+span:has(> svg[data-icon="clapperboard"]),
+span:has(> svg[data-icon="code"]) {
+  gap: 6px;
+  font-size: 14px !important;
+  white-space: nowrap;
+  width: auto !important;
+  height: 32px !important;
+  box-sizing: border-box !important;
+  padding: 0 12px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+}
+/* 並びは左寄せ(真ん中寄せだと左に隙間ができる) */
+div[style^="pointer-events: all"] ~ div:last-child > div > div:has(svg[data-icon="clapperboard"]) {
+  align-items: flex-start !important;
+  padding-top: 0 !important;
+}
+div[style^="pointer-events: all"] ~ div:last-child > div > div:has(svg[data-icon="clapperboard"]) > div:has(svg[data-icon="clapperboard"]) {
+  justify-content: flex-start !important;
+  margin-top: 4px;
+}
+/* 吹き出しを「いつも見えている文字」にする */
+div[style^="pointer-events: all"] ~ div:last-child .tooltip {
+  position: static !important;
+  opacity: 1 !important;
+  transform: none !important;
+  visibility: visible !important;
+  width: auto !important;
+  height: auto !important;
+  margin: 0 !important;
+  padding: 0 10px 0 4px !important;
+  pointer-events: none;
+  background: var(--p-control);
+  display: flex !important;
+  align-items: center;
+}
+div[style^="pointer-events: all"] ~ div:last-child .tooltip > div:first-child {
+  background: none !important;
+  color: var(--p-text) !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  transform: none !important;
+  border-radius: 0 !important;
+  font-size: 14px !important;
+  line-height: 20px !important;
+  text-transform: none !important;
+  white-space: nowrap !important;
+  width: auto !important;
+  height: auto !important;
+}
+div[style^="pointer-events: all"] ~ div:last-child .tooltip > div:not(:first-child) {
+  display: none !important;  /* 吹き出しのしっぽ */
+}
+/* 使用量(16 / 224 Bytes)は、バーの下に普通の文字で出す */
+div[style^="pointer-events: all"] ~ div:last-child div:has(> .tooltip):not(button) > .tooltip {
+  background: none;
+  padding: 0 !important;
+  margin-top: 4px !important;
+}
+/* 録音の操作ボタン。VIA は「オン」をボタンの背景を強調色にするだけで示し、文字も同じ強調色なので
+   オンにした瞬間に名前が消える。アイコンと名前は暗い下地に乗せて、オンのときは強調色の枠に見えるようにする。 */
+div[style^="pointer-events: all"] ~ div:last-child div:has(> button > .tooltip) {
+  gap: 4px;
+}
+div[style^="pointer-events: all"] ~ div:last-child button:has(> .tooltip) {
+  width: auto !important;
+  height: 32px !important;
+  padding: 3px !important;
+  display: inline-flex !important;
+  align-items: stretch !important;
+  border: 1px solid var(--p-border) !important;
+  border-radius: 0 !important;
+  color: var(--p-text) !important;
+}
+div[style^="pointer-events: all"] ~ div:last-child button:has(> .tooltip) > svg {
+  position: static !important;
+  color: var(--p-text) !important;
+  background: var(--p-control);
+  height: 14px !important;
+  width: auto !important;
+  padding: 6px 4px 6px 10px;
+  box-sizing: content-box !important;
+  margin: 0 !important;
+}
+/* 押せないボタン(全画面でないときの録音)は、文字を補助の色にする */
+div[style^="pointer-events: all"] ~ div:last-child button:disabled:has(> .tooltip) > svg,
+div[style^="pointer-events: all"] ~ div:last-child button:disabled:has(> .tooltip) .tooltip > div:first-child {
+  color: var(--p-text-dim) !important;
 }
 
 
