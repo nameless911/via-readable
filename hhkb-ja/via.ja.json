@@ -95,13 +95,13 @@
   },
   "menus": [
     {
-      "label": "HHKB 詳細設定",
+      "label": "HHKB",
       "content": [
         {
-          "label": "キー走査",
+          "label": "読み取りとタップ",
           "content": [
             {
-              "label": "走査周期",
+              "label": "キーを読み取る回数（毎秒）",
               "type": "dropdown",
               "options": [
                 [
@@ -194,10 +194,10 @@
           ]
         },
         {
-          "label": "感度補正",
+          "label": "押し込み量",
           "content": [
             {
-              "label": "ストローク補正曲線を使用する",
+              "label": "押し込み量の換算表を使用する",
               "type": "toggle",
               "content": [
                 "id_ec_curve_enabled",
@@ -1430,7 +1430,7 @@
               "showIf": "{id_ec_curve_enabled} == 1"
             },
             {
-              "label": "曲線のなめらかさ",
+              "label": "換算表のなめらかさ",
               "type": "dropdown",
               "options": [
                 [
@@ -1486,7 +1486,7 @@
               "showIf": "{id_ec_curve_enabled} == 1"
             },
             {
-              "label": "補正曲線の状態",
+              "label": "換算表の状態",
               "type": "label",
               "content": [
                 "id_ec_curve_status",
@@ -1499,25 +1499,25 @@
               "label": "手順 1．準備",
               "type": "label",
               "content": [
-                "「感度補正値を使用する」を有効にし、すべてのキーから手を離してください。"
+                "「測定値を使用する」を有効にし、すべてのキーから手を離してください。"
               ]
             },
             {
               "label": "手順 2．測定",
               "type": "label",
               "content": [
-                "「感度補正を開始」を押下後、補正するキーを奥まで押下してください。"
+                "「測定を開始」を押下後、測定するキーを奥まで押下してください。"
               ]
             },
             {
               "label": "手順 3．保存",
               "type": "label",
               "content": [
-                "「終了して保存」を押下してください。※出荷時の値に戻すには「感度補正値を使用する」を無効にします。"
+                "「測定を終了して保存」を押下してください。※出荷時の値に戻すには「測定値を使用する」を無効にします。"
               ]
             },
             {
-              "label": "感度補正値を使用する",
+              "label": "測定値を使用する",
               "type": "toggle",
               "content": [
                 "id_hhkb_calibration",
@@ -1526,7 +1526,7 @@
               ]
             },
             {
-              "label": "感度補正の状態",
+              "label": "測定の状態",
               "type": "label",
               "content": [
                 "id_hhkb_cal_status",
@@ -1542,7 +1542,7 @@
               ]
             },
             {
-              "label": "感度補正を開始",
+              "label": "測定を開始",
               "type": "button",
               "options": [
                 1
@@ -1554,7 +1554,7 @@
               ]
             },
             {
-              "label": "状態を HID コンソールへ出力",
+              "label": "測定の状態を HID コンソールへ出力",
               "type": "button",
               "options": [
                 1
@@ -1566,7 +1566,7 @@
               ]
             },
             {
-              "label": "終了して保存",
+              "label": "測定を終了して保存",
               "type": "button",
               "options": [
                 1
@@ -2455,7 +2455,7 @@
           "showIf": "{id_firmware_version} == 2 || {id_firmware_version} == 4"
         },
         {
-          "label": "LED 表示",
+          "label": "LED",
           "content": [
             {
               "label": "青色 LED（PA8）",
@@ -2522,7 +2522,7 @@
           ]
         },
         {
-          "label": "省電力機能",
+          "label": "省電力",
           "content": [
             {
               "label": "省電力機能を使用する",
@@ -2543,7 +2543,7 @@
           ]
         },
         {
-          "label": "Bluetooth 接続",
+          "label": "Bluetooth",
           "showIf": "{id_hhkb_hybrid} == 1",
           "content": [
             {
@@ -2830,7 +2830,7 @@
               ]
             },
             {
-              "label": "感度補正の経過出力",
+              "label": "測定の経過出力",
               "type": "toggle",
               "content": [
                 "id_hhkb_debug_cal",
@@ -2842,7 +2842,7 @@
               "label": "設定の初期化",
               "type": "label",
               "content": [
-                "DMK の設定・感度補正値・キーマップをすべて消去します。"
+                "DMK の設定・測定値・キーマップをすべて消去します。"
               ]
             },
             {
