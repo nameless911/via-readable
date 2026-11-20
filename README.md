@@ -18,3 +18,20 @@
 3. VIA を再読み込み
 
 色を変えたいときは、ファイル上のほうの「パレット」だけ直せば全部に効く。
+
+## HHKB 詳細設定の日本語化(`hhkb-ja/`)
+
+DMK の `via.json` の「HHKB Settings」を、PFU/富士通の取扱説明書っぽい日本語にしたもの。
+
+- `via.ja.json` … できあがり。VIA の「定義ファイル」タブで、元の `via.json` の代わりに読み込む
+- `translation.json` … 英語 → 日本語の対応表
+- `make_ja.py` … 対応表から `via.ja.json` を作る
+
+DMK 側の `via.json` が更新されたら作り直す:
+
+```
+uv run python hhkb-ja/make_ja.py <dmk>/keyboards/hhkb/via.json
+```
+
+未訳の文字列があれば一覧が出るので、`translation.json` に足して流し直す。
+状態表示(「Writable」など)はファームウェアが返す文字なので、ここでは訳せない。
