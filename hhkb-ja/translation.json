@@ -1,7 +1,7 @@
 {
   "_comment": "DMK の via.json の表示文字列 → 日本語。PFU/富士通の取扱説明書の言い回し(押下・解放・周期・有効にする、全角括弧、※注記)に寄せている。左が英語の原文そのまま。原文が変わったら左を合わせて直す。",
   "HHKB Settings": "HHKB",
-  "Scan Rate": "読み取りとタップ",
+  "Scan Rate": "読み取り",
   "Target scan rate": "キーを読み取る回数（毎秒）",
   "At 1000 Hz ADC uses 1x;": "※1000Hz では AD 変換は 1 回となります。",
   "4x resumes at 500 Hz or less.": "500Hz 以下で 4 回平均に戻ります。",
@@ -10,7 +10,7 @@
   "Permissive hold": "押下中の他キーでホールドを確定する",
   "Tap preferred": "タップを優先する",
   "Quick tap (10 ms units; 0 disables)": "連続タップ判定時間（単位：10ms、0 で無効）",
-  "Calibration": "押し込み量",
+  "Calibration": "APC",
   "Use travel curve": "押し込み量の換算表を使用する",
   "ADC at 1 mm (%)": "1mm 押下時の AD 値（％）",
   "ADC at 2 mm (%)": "2mm 押下時の AD 値（％）",

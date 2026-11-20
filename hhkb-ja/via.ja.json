@@ -98,7 +98,7 @@
       "label": "HHKB",
       "content": [
         {
-          "label": "読み取りとタップ",
+          "label": "読み取り",
           "content": [
             {
               "label": "キーを読み取る回数（毎秒）",
@@ -194,7 +194,7 @@
           ]
         },
         {
-          "label": "押し込み量",
+          "label": "APC",
           "content": [
             {
               "label": "押し込み量の換算表を使用する",
