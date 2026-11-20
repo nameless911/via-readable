@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         VIA calibration visualizer (HHKB DMK)
 // @namespace    local
-// @version      1.0.0
+// @version      1.0.1
 // @description  DMK の測定(キャリブレーション)で、今回測ったキーをキー配列の絵に強調色で塗る。レイヤー 0〜3 の右に切り替えボタンを足す。
 // @match        https://usevia.app/*
 // @match        https://www.usevia.app/*
@@ -200,13 +200,18 @@
           : '';
       }
     }
-    // 60 キーの絵(キー配列・定義ファイル)にだけ塗る。キーテストの 108 キーの絵は対象外
+    // 塗るのはキー配列の画面(/)の絵だけ。VIA は定義ファイル画面の絵も裏に置いているので、
+    // URL で絞らないとそっちまで塗られる。60 キーの絵だけが対象(キーテストの 108 キーの絵は違う)
+    const onKeymap = location.pathname === '/' || location.pathname === '';
     const drawings = document.querySelectorAll('div[style*="pointer-events: all"][style*="position: absolute"]');
+    let first = true;
     for (const dr of drawings) {
       const keys = dr.querySelectorAll(':scope > div > div:last-child > div > div');
       if (keys.length !== LAYOUT.length) continue;
+      const paint = onKeymap && first;  // 並びの最初の 60 キーの絵がキー配列の画面のもの
+      first = false;
       keys.forEach((k, i) => {
-        const want = state.on && state.done.has(LAYOUT[i]) ? 'done' : null;
+        const want = paint && state.on && state.done.has(LAYOUT[i]) ? 'done' : null;
         if (want) {
           if (k.dataset.vcal !== want) k.dataset.vcal = want;
         } else if (k.dataset.vcal) {

@@ -1,7 +1,7 @@
 /* ==UserStyle==
 @name         VIA readable
 @namespace    local
-@version      1.23.0
+@version      1.24.0
 @description  VIA の薄ピンクとフォントを、Filer の theme.py と同じ Win11 配色と UD フォントに置き換える。Windows のライト/ダークに追従。
 ==/UserStyle== */
 
@@ -192,6 +192,7 @@ span[href]::after {
 span[href="/"]::after         { content: "キー配列"; }
 span[href="/test"]::after     { content: "キーテスト"; }
 span[href="/design"]::after   { content: "定義ファイル"; }
+span[href="/console"]::after  { content: "コンソール"; }
 span[href="/settings"]::after { content: "VIA の設定"; }
 
 /* ---------- キーボードの絵 ----------
@@ -438,13 +439,35 @@ div[style^="pointer-events: all"]:has(> div > div:only-child > span > svg) {
   border: 0 !important;
   overflow: hidden !important;
 }
-/* その画面の設定行(項目名と操作部品)。VIA の元は 20px・行の高さ 50px で間延びしている。
-   2 列目が無い画面(左端のすぐ隣が最後の列)の行だけに効かせる。 */
-div[style^="pointer-events: all"] + div:last-child > div > div {
+/* 項目が 1 つしかない画面(キーテスト・定義ファイル・VIA の設定)の設定行。
+   こっちは行が 1 段浅いところ(最後の列 > 並び > 行)にある。見た目は下の「設定行」と同じにする。 */
+div[style^="pointer-events: all"] + div:last-child > div > div:has(> label) {
   font-size: 15px !important;
   line-height: 24px !important;
-  min-height: 44px !important;
+  min-height: 32px !important;
+  height: 32px !important;
+  box-sizing: border-box !important;
   align-items: center !important;
+}
+div[style^="pointer-events: all"] + div:last-child > div > div:has(> label) *:not(svg):not(svg *) {
+  font-size: 15px !important;
+  line-height: 24px !important;
+}
+div[style^="pointer-events: all"] + div:last-child > div > div:has(> label) > :last-child:has(input, svg):not(:has(button)) {
+  transform: scale(0.78);
+  transform-origin: right center;
+}
+div[style^="pointer-events: all"] + div:last-child > div > div:has(> label) button {
+  height: 24px !important;
+  min-height: 0 !important;
+  line-height: 22px !important;
+  padding: 0 14px !important;
+  font-size: 13px !important;
+  box-sizing: border-box !important;
+  margin: 0 !important;
+}
+div[style^="pointer-events: all"] + div:last-child > div:has(> div > label) {
+  align-items: flex-start !important;  /* 左寄せ */
 }
 /* 設定行(項目名と操作部品)。HHKB・レイアウト・保存/読み込みなど、項目名(label)を持つ行は全部同じ見た目にする。
    VIA の元は 20px・行の高さ 50px で間延びしている。左の 2 列(32px)とピッチを合わせる。
@@ -803,4 +826,54 @@ div:has(> :nth-child(108)):not(:has(> :nth-child(109))):not(:has(canvas)) {
 }
 @-moz-document regexp("https://(www\\.)?usevia\\.app/settings.*") {
   span[href="/settings"], span[href="/settings"]:hover { color: var(--p-on-accent) !important; }
+}
+@-moz-document regexp("https://(www\\.)?usevia\\.app/console.*") {
+  span[href="/console"], span[href="/console"]:hover { color: var(--p-on-accent) !important; }
+
+  /* コンソールの画面。上の操作の並びを、ほかの画面の設定行と同じ 32px・13px のボタンにそろえる。 */
+  #root div:has(> div > button):has(pre) {
+    padding: 0 12px 12px !important;
+    gap: 8px;
+  }
+  #root div:has(> button):not(:has(pre)):has(> div) {
+    height: 32px !important;
+    min-height: 32px !important;
+    align-items: center !important;
+    gap: 6px;
+    border-bottom: 1px solid var(--p-border);
+    box-sizing: border-box;
+    padding: 0 5px !important;
+  }
+  #root div:has(> button):not(:has(pre)):has(> div) > button {
+    height: 24px !important;
+    min-height: 0 !important;
+    line-height: 22px !important;
+    padding: 0 14px !important;
+    font-size: 13px !important;
+    box-sizing: border-box !important;
+    margin: 0 !important;
+  }
+  /* 押せないボタン(クリア・保存)。VIA は全体を半透明にするので、強調色が背景に溶けて読めない。
+     不透明に戻して、補助の文字色にする。 */
+  #root div:has(> button):not(:has(pre)):has(> div) > button:disabled {
+    opacity: 1 !important;
+    color: var(--p-text-dim) !important;
+    border-color: var(--p-border) !important;
+    cursor: not-allowed;
+  }
+  /* 端末の選択。行に合わせて縮めるかわりに、名前(HHKB Pro Classic PD-KB401B)が切れない幅にする */
+  #root div:has(> button):not(:has(pre)):has(> div) > div:first-child {
+    transform: scale(0.78);
+    transform-origin: left center;
+  }
+  #root div:has(> button):not(:has(pre)):has(> div) > div:first-child > div {
+    width: 360px !important;
+  }
+  /* 記録は等幅の UD フォントで。桁がそろうので、数字の列が読める */
+  #root pre {
+    font-family: "BIZ UDGothic", "BIZ UDゴシック", Consolas, monospace !important;
+    font-size: 14px !important;
+    line-height: 1.5 !important;
+    color: var(--p-text) !important;
+  }
 }
