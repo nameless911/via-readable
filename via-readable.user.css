@@ -1,7 +1,7 @@
 /* ==UserStyle==
 @name         VIA readable
 @namespace    local
-@version      1.24.0
+@version      1.24.1
 @description  VIA の薄ピンクとフォントを、Filer の theme.py と同じ Win11 配色と UD フォントに置き換える。Windows のライト/ダークに追従。
 ==/UserStyle== */
 
@@ -514,6 +514,46 @@ div[style^="pointer-events: all"] + div:not(:last-child) > div {
   padding-top: 0 !important;
 }
 
+/* ドロップダウン(Layout の ANSI、Target scan rate など)。
+   スイッチと一緒に 0.78 倍に縮めていたら、中の文字が 12px 未満になって読めず、箱も行いっぱいで窮屈だった。
+   ドロップダウンだけは縮めずに、箱を 26px・文字を 14px で作り直す。
+   (react-select の作り:入れ物 > 枠(control) > [選んだ文字の欄, 矢印の欄]) */
+div[style^="pointer-events: all"] ~ div:last-child > div > div > div:has(> label) > :last-child:has(svg):not(:has(input[type="checkbox"], input[type="range"], button)),
+div[style^="pointer-events: all"] + div:last-child > div > div:has(> label) > :last-child:has(svg):not(:has(input[type="checkbox"], input[type="range"], button)) {
+  transform: none !important;
+}
+div[style^="pointer-events: all"] ~ div:last-child > div > div > div:has(> label) > :last-child:has(svg):not(:has(input[type="checkbox"], input[type="range"], button)) > div > div:last-child,
+div[style^="pointer-events: all"] + div:last-child > div > div:has(> label) > :last-child:has(svg):not(:has(input[type="checkbox"], input[type="range"], button)) > div > div:last-child {
+  min-height: 26px !important;
+  height: 26px !important;
+  box-sizing: border-box !important;
+  border-radius: 3px !important;
+}
+div[style^="pointer-events: all"] ~ div:last-child > div > div > div:has(> label) > :last-child:has(svg):not(:has(input[type="checkbox"], input[type="range"], button)) > div > div:last-child > div,
+div[style^="pointer-events: all"] + div:last-child > div > div:has(> label) > :last-child:has(svg):not(:has(input[type="checkbox"], input[type="range"], button)) > div > div:last-child > div {
+  height: 24px !important;
+  min-height: 0 !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  align-items: center !important;
+}
+div[style^="pointer-events: all"] ~ div:last-child > div > div > div:has(> label) > :last-child:has(svg):not(:has(input[type="checkbox"], input[type="range"], button)) > div > div:last-child > div > div,
+div[style^="pointer-events: all"] + div:last-child > div > div:has(> label) > :last-child:has(svg):not(:has(input[type="checkbox"], input[type="range"], button)) > div > div:last-child > div > div {
+  margin: 0 !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  font-size: 14px !important;
+  line-height: 20px !important;
+}
+div[style^="pointer-events: all"] ~ div:last-child > div > div > div:has(> label) > :last-child:has(svg):not(:has(input[type="checkbox"], input[type="range"], button)) > div > div:last-child > div:last-child > div,
+div[style^="pointer-events: all"] + div:last-child > div > div:has(> label) > :last-child:has(svg):not(:has(input[type="checkbox"], input[type="range"], button)) > div > div:last-child > div:last-child > div {
+  padding: 0 6px !important;
+}
+div[style^="pointer-events: all"] ~ div:last-child > div > div > div:has(> label) > :last-child:has(svg):not(:has(input[type="checkbox"], input[type="range"], button)) input,
+div[style^="pointer-events: all"] + div:last-child > div > div:has(> label) > :last-child:has(svg):not(:has(input[type="checkbox"], input[type="range"], button)) input {
+  height: 20px !important;
+}
+
 /* マウスを乗せると出る吹き出し(画面のいちばん外に置かれる版)。
    新しい VIA は左端のメニューの名前などを、body 直下の position: fixed の箱で出す。名前はもう横に書いてあるので消す。 */
 body > div[style*="position: fixed"][style*="pointer-events: none"][style*="z-index: 10000"] {
@@ -861,13 +901,34 @@ div:has(> :nth-child(108)):not(:has(> :nth-child(109))):not(:has(canvas)) {
     border-color: var(--p-border) !important;
     cursor: not-allowed;
   }
-  /* 端末の選択。行に合わせて縮めるかわりに、名前(HHKB Pro Classic PD-KB401B)が切れない幅にする */
-  #root div:has(> button):not(:has(pre)):has(> div) > div:first-child {
-    transform: scale(0.78);
-    transform-origin: left center;
+  /* 端末の選択。設定行のドロップダウンと同じ 26px・14px にして、名前(HHKB Pro Classic PD-KB401B (0xCAFE:0x4014))が切れない幅にする。
+     ここは入れ物そのものが react-select なので、設定行より 1 段浅い。 */
+  #root div:has(> button):not(:has(pre)):has(> div) > div:first-child > div:last-child {
+    min-height: 26px !important;
+    height: 26px !important;
+    width: 440px !important;
+    box-sizing: border-box !important;
+    border-radius: 3px !important;
   }
-  #root div:has(> button):not(:has(pre)):has(> div) > div:first-child > div {
-    width: 360px !important;
+  #root div:has(> button):not(:has(pre)):has(> div) > div:first-child > div:last-child > div {
+    height: 24px !important;
+    min-height: 0 !important;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+    align-items: center !important;
+  }
+  #root div:has(> button):not(:has(pre)):has(> div) > div:first-child > div:last-child > div > div {
+    margin: 0 !important;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+    font-size: 14px !important;
+    line-height: 20px !important;
+  }
+  #root div:has(> button):not(:has(pre)):has(> div) > div:first-child > div:last-child > div:last-child > div {
+    padding: 0 6px !important;
+  }
+  #root div:has(> button):not(:has(pre)):has(> div) > div:first-child input {
+    height: 20px !important;
   }
   /* 記録は等幅の UD フォントで。桁がそろうので、数字の列が読める */
   #root pre {
