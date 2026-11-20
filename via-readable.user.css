@@ -1,7 +1,7 @@
 /* ==UserStyle==
 @name         VIA readable
 @namespace    local
-@version      1.21.5
+@version      1.22.0
 @description  VIA の薄ピンクとフォントを、Filer の theme.py と同じ Win11 配色と UD フォントに置き換える。Windows のライト/ダークに追従。
 ==/UserStyle== */
 
@@ -222,13 +222,19 @@ div[style*="pointer-events: all"][style*="position: absolute"] > div > div:last-
     #0A0A0A) !important;
   box-shadow: 0 2px 3px rgba(0, 0, 0, 0.5);
 }
-/* キーの天面と刻印。色を反転して、白い天面を暗いグレーに、黒い刻印を白っぽくする。
-   色を直接塗りつぶすと、選択中のキーの色分けまで消えるので、反転にしている。
-   hue-rotate で色相だけ元に戻すので、選択中の色は色味を保ったまま暗くなる。 */
+/* キーの天面と刻印。
+   VIA は「VIA の設定」のテーマ次第で、白いキーに黒い刻印にも、こげ茶のキーにピンクの刻印にもなる。
+   昔は色の反転でごまかしていたが、テーマが変わると刻印がクソ色(茶色にピンク)になったので、
+   テーマに関係なく色を決め打ちする:
+     天面 … #1F1F1F で塗る
+     刻印 … 刻印の絵(canvas)を brightness(0) でいったん真っ黒にしてから、invert で明るいグレーにする
+   選択中(--sel = 1)は天面を強調色で塗り、刻印は真っ黒のまま(反転しない)。 */
 div[style*="pointer-events: all"][style*="position: absolute"] > div > div:last-child > div > div > div:has(> canvas) {
-  /* 選択中(--sel = 1)は反転をやめて強調色で塗る。黒い刻印がそのまま強調色の上に乗る。 */
-  filter: invert(calc(0.885 * (1 - var(--sel)))) hue-rotate(calc(180deg * (1 - var(--sel)))) !important;
-  background-color: color-mix(in srgb, var(--p-accent) calc(var(--sel) * 100%), #fefefe) !important;
+  filter: none !important;
+  background-color: color-mix(in srgb, var(--p-accent) calc(var(--sel) * 100%), #1F1F1F) !important;
+}
+div[style*="pointer-events: all"][style*="position: absolute"] > div > div:last-child > div > div > div:has(> canvas) > canvas {
+  filter: brightness(0) invert(calc(0.91 * (1 - var(--sel)))) !important;
 }
 
 /* ---------- 選択中のキー ----------
@@ -273,7 +279,7 @@ div[style*="pointer-events: all"][style*="position: absolute"] > div > div:last-
   background-color: color-mix(in srgb, var(--p-accent) 55%, #000) !important;  /* 天面:強調色を暗く。白い刻印と 5:1 程度 */
 }
 div[style*="pointer-events: all"][style*="position: absolute"] > div > div:last-child > div > div:has(> div[style*="opacity: 0.4"]) > div:has(> canvas) > canvas {
-  filter: invert(1);  /* 黒い刻印を白に */
+  filter: brightness(0) invert(1) !important;  /* 刻印を白に */
 }
 div[style*="pointer-events: all"][style*="position: absolute"] > div > div:last-child > div > div > div[style*="opacity"] {
   opacity: 0 !important;

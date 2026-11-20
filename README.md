@@ -35,3 +35,19 @@ uv run python hhkb-ja/make_ja.py <dmk>/keyboards/hhkb/via.json
 
 未訳の文字列があれば一覧が出るので、`translation.json` に足して流し直す。
 状態表示(「Writable」など)はファームウェアが返す文字なので、ここでは訳せない。
+
+## 測定(キャリブレーション)の見える化(`via-calibration-visualizer.user.js`)
+
+キー配列の画面で、レイヤー 0〜3 の右に「測定済みを表示 n/60」ボタンが出る。
+オンにすると、今回の測定で測れたキーがキーボードの絵の上で強調色(#4CC2FF)に塗られる。
+
+JavaScript が要るので、Stylus ではなく Tampermonkey で入れる:
+
+1. Chrome に [Tampermonkey](https://chromewebstore.google.com/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo) を入れる
+2. `chrome://extensions` → Tampermonkey の「詳細」→「ユーザー スクリプトを許可する」をオン
+   (古い Chrome ならページ右上の「デベロッパー モード」をオン)
+3. `via-calibration-visualizer.user.js` を Tampermonkey で開いて「インストール」
+4. VIA を再読み込み
+
+色が付くのは、HHKB → 保守・診断 →「測定の経過出力」がオンのときだけ
+(DMK は測定の経過を HID コンソールに流していて、それを横から読んでいる)。
