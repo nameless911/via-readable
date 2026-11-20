@@ -1,7 +1,7 @@
 /* ==UserStyle==
-@name         VIA readable (Filer palette)
+@name         VIA readable
 @namespace    local
-@version      1.16.1
+@version      1.18.0
 @description  VIA の薄ピンクとフォントを、Filer の theme.py と同じ Win11 配色と UD フォントに置き換える。Windows のライト/ダークに追従。
 ==/UserStyle== */
 
@@ -230,6 +230,16 @@ div[style*="pointer-events: all"][style*="position: absolute"] > div > div:last-
   transform: none !important;
 }
 
+/* キーテストの画面:押したことのあるキーは、VIA がワイン色(mediumvioletred)の板を
+   半透明で重ねて示す。これをやめて、選択中のキーと同じ強調色の塗りにする。
+   板(style に opacity が 0 以外で書かれている子)があるキーに --sel = 1 を立て、板は隠す。 */
+div[style*="pointer-events: all"][style*="position: absolute"] > div > div:last-child > div > div:has(> div[style*="opacity"]:not([style*="opacity: 0;"])) {
+  --sel: 1;
+}
+div[style*="pointer-events: all"][style*="position: absolute"] > div > div:last-child > div > div > div[style*="opacity"] {
+  opacity: 0 !important;
+}
+
 /* ---------- 左端のメニューに名前を出す ----------
    アホの考えたフラットデザインはこのようにして無慈悲にラベルが表示されるのです。やめようね。
 
@@ -306,8 +316,10 @@ label > input[type="checkbox"]:not(:checked) + span::before {
 
 /* 2 列目のメニューを左端と同じ見た目にそろえる。
    VIA の元は 20px・全部大文字・角の丸い札。左端と同じ 14px・そのままの綴り・四角い帯にする。
-   場所は「左端のメニューのすぐ隣の列」の、そのまた中の行(左端 + 列 > 一覧 > 行)。 */
-div[style^="pointer-events: all"] + div > div > div {
+   場所は「左端のメニューのすぐ隣の列」の、そのまた中の行(左端 + 列 > 一覧 > 行)。
+   キーテストの画面のように 2 列目が無いときは、すぐ隣が中身の列(いちばん最後の列)になるので、
+   :not(:last-child) で外す。外さないと中身の行まで崩れる。 */
+div[style^="pointer-events: all"] + div:not(:last-child) > div > div {
   font-size: 14px !important;
   line-height: 20px !important;
   text-transform: none !important;
@@ -318,7 +330,7 @@ div[style^="pointer-events: all"] + div > div > div {
   margin: 0 !important;
   min-width: 0 !important;
 }
-div[style^="pointer-events: all"] + div > div {
+div[style^="pointer-events: all"] + div:not(:last-child) > div {
   padding-left: 0 !important;
   padding-right: 0 !important;
 }
@@ -331,7 +343,7 @@ div[style^="pointer-events: all"] + div > div {
      - 列そのものは文字を持たないので、同じ背景を敷いても見えない
    文字色(color)は塗りに使わないので、マウスを乗せても選択中のようには見えない。
    マウスを乗せた行には、強調色を薄く(35%)重ねる(左端と同じ)。 */
-div[style^="pointer-events: all"] + div > div {
+div[style^="pointer-events: all"] + div:not(:last-child) > div {
   --bg_icon: linear-gradient(var(--p-on-accent), var(--p-on-accent)),
              linear-gradient(var(--p-sel), var(--p-sel)) !important;
   background: linear-gradient(var(--p-text), var(--p-text)),
@@ -339,17 +351,17 @@ div[style^="pointer-events: all"] + div > div {
   -webkit-background-clip: text, border-box !important;
   background-clip: text, border-box !important;
 }
-div[style^="pointer-events: all"] + div > div > div {
+div[style^="pointer-events: all"] + div:not(:last-child) > div > div {
   -webkit-background-clip: text, border-box !important;
   background-clip: text, border-box !important;
   -webkit-text-fill-color: transparent !important;
 }
-div[style^="pointer-events: all"] + div > div > div:hover {
+div[style^="pointer-events: all"] + div:not(:last-child) > div > div:hover {
   box-shadow: inset 0 0 0 100px rgb(from var(--p-sel) r g b / 0.35) !important;
 }
 /* 左端と 2 列目の行の高さをそろえて、横に並んだ行の位置を合わせる */
 div[style^="pointer-events: all"] div:has(> span > svg),
-div[style^="pointer-events: all"] + div > div > div {
+div[style^="pointer-events: all"] + div:not(:last-child) > div > div {
   height: 32px !important;
   box-sizing: border-box !important;
   display: flex !important;
@@ -362,6 +374,25 @@ div[style^="pointer-events: all"] span:has(> svg > path[d^="M8.285 0a8.285"])::a
 div[style^="pointer-events: all"] span:has(> svg[data-icon="lightbulb"])::after        { content: "ライト"; }
 div[style^="pointer-events: all"] span:has(> svg[data-icon="floppy-disk"])::after      { content: "保存・読み込み"; }
 div[style^="pointer-events: all"] span:has(> svg[data-icon="microchip"])::after        { content: "HHKB"; }
+div[style^="pointer-events: all"] span:has(> svg[data-icon="circle-question"])::after  { content: "キーテスト"; }
+
+/* 項目が 1 つしかない画面(キーテスト・定義ファイル・VIA の設定)では、左端の列は要らないので畳む。
+   display: none にすると、並びの枠(grid)の 1 列目に中身が押し込まれて崩れるので、幅 0 にする。 */
+div[style^="pointer-events: all"]:has(> div > div:only-child) {
+  width: 0 !important;
+  min-width: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  overflow: hidden !important;
+}
+/* その画面の設定行(項目名と操作部品)。VIA の元は 20px・行の高さ 50px で間延びしている。
+   2 列目が無い画面(左端のすぐ隣が最後の列)の行だけに効かせる。 */
+div[style^="pointer-events: all"] + div:last-child > div > div {
+  font-size: 15px !important;
+  line-height: 24px !important;
+  min-height: 44px !important;
+  align-items: center !important;
+}
 
 }
 
