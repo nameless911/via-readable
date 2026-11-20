@@ -1,7 +1,7 @@
 /* ==UserStyle==
 @name         VIA readable
 @namespace    local
-@version      1.21.4
+@version      1.21.5
 @description  VIA の薄ピンクとフォントを、Filer の theme.py と同じ Win11 配色と UD フォントに置き換える。Windows のライト/ダークに追従。
 ==/UserStyle== */
 
@@ -456,6 +456,16 @@ div[style^="pointer-events: all"] + div:not(:last-child) + div > div > div > div
 div[style^="pointer-events: all"] + div:not(:last-child) + div > div > div > div:has(> label) > :last-child:has(input, svg) {
   transform: scale(0.78);
   transform-origin: right center;
+}
+/* 押しボタン(Start calibration の「クリック」など)も 32px の行に収める */
+div[style^="pointer-events: all"] + div:not(:last-child) + div > div > div > div:has(> label) button {
+  height: 24px !important;
+  min-height: 0 !important;
+  line-height: 22px !important;
+  padding: 0 14px !important;
+  font-size: 13px !important;
+  box-sizing: border-box !important;
+  margin: 0 !important;
 }
 /* 左端と 2 列目のメニューの上の隙間をなくして、右の行と高さをそろえる */
 div[style^="pointer-events: all"] > div:has(span > svg),
