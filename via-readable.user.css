@@ -1,7 +1,7 @@
 /* ==UserStyle==
 @name         VIA readable
 @namespace    local
-@version      1.18.0
+@version      1.18.1
 @description  VIA の薄ピンクとフォントを、Filer の theme.py と同じ Win11 配色と UD フォントに置き換える。Windows のライト/ダークに追従。
 ==/UserStyle== */
 
@@ -230,11 +230,18 @@ div[style*="pointer-events: all"][style*="position: absolute"] > div > div:last-
   transform: none !important;
 }
 
-/* キーテストの画面:押したことのあるキーは、VIA がワイン色(mediumvioletred)の板を
-   半透明で重ねて示す。これをやめて、選択中のキーと同じ強調色の塗りにする。
-   板(style に opacity が 0 以外で書かれている子)があるキーに --sel = 1 を立て、板は隠す。 */
-div[style*="pointer-events: all"][style*="position: absolute"] > div > div:last-child > div > div:has(> div[style*="opacity"]:not([style*="opacity: 0;"])) {
+/* キーテストの画面:VIA はワイン色(mediumvioletred)の板を重ねて、キーの状態を示す。
+     いま押している       … 板の不透明度 0.6
+     押したことがある(履歴) … 板の不透明度 0.4
+     まだ押していない     … 板の不透明度 0
+   板は隠して、選択中のキーと同じ強調色の塗り(--sel = 1)にする。
+   履歴のほうは彩度と明るさを落として、いま押しているキーと見分けられるようにする。 */
+div[style*="pointer-events: all"][style*="position: absolute"] > div > div:last-child > div > div:has(> div[style*="opacity: 0.6"]) {
   --sel: 1;
+}
+div[style*="pointer-events: all"][style*="position: absolute"] > div > div:last-child > div > div:has(> div[style*="opacity: 0.4"]) {
+  --sel: 1;
+  filter: saturate(0.35) brightness(0.75);
 }
 div[style*="pointer-events: all"][style*="position: absolute"] > div > div:last-child > div > div > div[style*="opacity"] {
   opacity: 0 !important;
