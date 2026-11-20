@@ -1,7 +1,7 @@
 /* ==UserStyle==
 @name         VIA readable
 @namespace    local
-@version      1.24.2
+@version      1.25.0
 @description  VIA の薄ピンクとフォントを、Filer の theme.py と同じ Win11 配色と UD フォントに置き換える。Windows のライト/ダークに追従。
 ==/UserStyle== */
 
@@ -748,6 +748,10 @@ div:has(> :nth-child(108)):not(:has(> :nth-child(109))):not(:has(canvas)) {
   gap: 4px 0 !important;
   width: 100% !important;
   max-width: 1100px;
+  /* 上のキーボードの絵(画面の真ん中に置かれる)と中心をそろえる。
+     一覧は左の 2 列(151px + 81px)と余白 12px の右から始まるので、そのぶんを引いて真ん中まで寄せる。
+     画面が狭くて寄せる余地が無いときは 0(左に詰める)。 */
+  margin-left: max(0px, calc(50vw - 550px - 244px)) !important;
   & > * { width: auto !important; min-width: 0 !important; height: auto !important; margin: 0 2px !important; }
   /* 名前が「…」で切れないようにする。折り返しは単語の切れ目だけ(「Scro / ll」のような切り方はしない)。 */
   & > *, & > * > * {
@@ -891,6 +895,14 @@ div:has(> :nth-child(108)):not(:has(> :nth-child(109))):not(:has(canvas)) {
 }
 @-moz-document regexp("https://(www\\.)?usevia\\.app/test.*") {
   span[href="/test"], span[href="/test"]:hover { color: var(--p-on-accent) !important; }
+
+  /* キーテストの「キー音」「音量」「トランスポーズ」「波形」「モード」は消す。
+     そういうお遊び機能やるなとは言わんけどすべっとるで
+     (キーボードをリセット・マトリックスをテストの 2 行だけ残す。消す前にキー音はオフにしてある。
+     オンのまま消すと、切る手段が無くなって鳴りっぱなしになるので注意) */
+  div[style^="pointer-events: all"] + div:last-child > div > div:has(> label):nth-child(n+3) {
+    display: none !important;
+  }
 }
 @-moz-document regexp("https://(www\\.)?usevia\\.app/design.*") {
   span[href="/design"], span[href="/design"]:hover { color: var(--p-on-accent) !important; }
