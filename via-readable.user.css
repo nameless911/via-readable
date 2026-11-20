@@ -1,7 +1,7 @@
 /* ==UserStyle==
 @name         VIA readable
 @namespace    local
-@version      1.21.2
+@version      1.21.3
 @description  VIA の薄ピンクとフォントを、Filer の theme.py と同じ Win11 配色と UD フォントに置き換える。Windows のライト/ダークに追従。
 ==/UserStyle== */
 
@@ -439,6 +439,18 @@ div[style^="pointer-events: all"] + div:last-child > div > div {
   line-height: 24px !important;
   min-height: 44px !important;
   align-items: center !important;
+}
+/* 2 列目がある画面(HHKB など)の設定行も同じ大きさにする。
+   3 列目の中の、項目名(label)を持つ行だけ。キーコードの一覧(ボタン)には当てない。
+   行の中の操作部品(ドロップダウンの文字など)も 20px のままだと浮くので、そろえる。 */
+div[style^="pointer-events: all"] + div:not(:last-child) + div > div > div > div:has(> label) {
+  font-size: 15px !important;
+  line-height: 24px !important;
+  min-height: 44px !important;
+  align-items: center !important;
+}
+div[style^="pointer-events: all"] + div:not(:last-child) + div > div > div > div:has(> label) *:not(svg):not(svg *) {
+  font-size: 15px !important;
 }
 
 
