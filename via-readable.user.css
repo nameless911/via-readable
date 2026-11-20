@@ -1,7 +1,7 @@
 /* ==UserStyle==
 @name         VIA readable (Filer palette)
 @namespace    local
-@version      1.13.0
+@version      1.14.0
 @description  VIA の薄ピンクとフォントを、Filer の theme.py と同じ Win11 配色と UD フォントに置き換える。Windows のライト/ダークに追従。
 ==/UserStyle== */
 
@@ -69,7 +69,10 @@
   --p-text-dim:    #9A9A9A;  /* row_dim    : 非選択のラベル */
   --p-accent:      #4CC2FF;  /* tab_accent : 選択中・強調 */
   --p-on-accent:   #000000;  /* 強調色の上に乗る文字 */
-  --p-sel:         #0F4C81;  /* sel_top    : 選択中の帯(メニュー) */
+  --p-sel:         var(--p-accent);  /* 選択中の帯(メニュー)。上端のアイコンと同じ強調色 */
+  /* 帯の上と外の文字の明るさ(0〜255)。--p-on-accent と --p-text を数字で書いたもの */
+  --p-text-level:      232;
+  --p-on-accent-level: 0;
 }
 
 /* ---------- パレット:ライト(win11)。Windows がライトのときだけ ---------- */
@@ -84,7 +87,8 @@
     --p-text-dim:    #6A6A6A;
     --p-accent:      #0067C0;
     --p-on-accent:   #FFFFFF;
-    --p-sel:         #CCE4F7;
+    --p-text-level:      26;
+    --p-on-accent-level: 255;
   }
 }
 
@@ -250,7 +254,13 @@ div[style^="pointer-events: all"] div:has(> span > svg):hover {
   color: var(--p-sel) !important;
 }
 div[style^="pointer-events: all"] span:has(> svg) {
-  color: var(--p-text) !important;
+  /* 帯の上(行の色が不透明)なら強調色の上の文字色、帯なし(透明)なら普通の文字色。
+     最後の「/ 1」で不透明にする。無いと元の透明さを引き継いで文字が消える。 */
+  color: rgb(from currentColor
+    calc(var(--p-text-level) + (var(--p-on-accent-level) - var(--p-text-level)) * alpha)
+    calc(var(--p-text-level) + (var(--p-on-accent-level) - var(--p-text-level)) * alpha)
+    calc(var(--p-text-level) + (var(--p-on-accent-level) - var(--p-text-level)) * alpha)
+    / 1) !important;
 }
 
 /* 2 列目のメニュー(基本/メディア…、読み取り/APC…)は、VIA が選択中を --bg_icon で塗るので、
@@ -281,7 +291,21 @@ div[style^="pointer-events: all"] + div > div {
 }
 div[style^="pointer-events: all"] + div > div > div:hover {
   background: var(--p-sel) !important;
-  color: var(--p-text) !important;
+  color: var(--p-on-accent) !important;
+}
+/* 2 列目の選択中の文字は --color_label-highlighted で描かれる。この列の中だけ、
+   強調色の上の文字色に差し替える(列の外では本文の色のまま)。 */
+div[style^="pointer-events: all"] + div {
+  --color_label-highlighted: var(--p-on-accent) !important;
+}
+/* 左端と 2 列目の行の高さをそろえて、横に並んだ行の位置を合わせる */
+div[style^="pointer-events: all"] div:has(> span > svg),
+div[style^="pointer-events: all"] + div > div > div {
+  height: 32px !important;
+  box-sizing: border-box !important;
+  display: flex !important;
+  align-items: center !important;
+  padding: 0 12px !important;
 }
 div[style^="pointer-events: all"] span:has(> svg[data-icon="book"])::after             { content: "キーマップ"; }
 div[style^="pointer-events: all"] span:has(> svg > path[d^="M3 13h8V3H3v10z"])::after  { content: "レイアウト"; }
