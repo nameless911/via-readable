@@ -23,6 +23,8 @@
 
 DMK の `via.json` の「HHKB Settings」を、PFU/富士通の取扱説明書っぽい日本語にしたもの。
 
+`via.ja.json` は [DMK](https://github.com/aroum/dmk) の `keyboards/hhkb/via.json`(MIT License, Copyright (c) 2026 aroum)を元に、文字列だけ日本語に置き換えたもの。
+
 - `via.ja.json` … できあがり。VIA の「定義ファイル」タブで、元の `via.json` の代わりに読み込む
 - `translation.json` … 英語 → 日本語の対応表
 - `make_ja.py` … 対応表から `via.ja.json` を作る
