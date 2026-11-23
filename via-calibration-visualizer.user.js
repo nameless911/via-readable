@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         VIA calibration visualizer (HHKB DMK)
 // @namespace    local
-// @version      1.0.1
+// @version      1.0.2
 // @description  DMK の測定(キャリブレーション)で、今回測ったキーをキー配列の絵に強調色で塗る。レイヤー 0〜3 の右に切り替えボタンを足す。
 // @match        https://usevia.app/*
 // @match        https://www.usevia.app/*
@@ -206,7 +206,10 @@
     const drawings = document.querySelectorAll('div[style*="pointer-events: all"][style*="position: absolute"]');
     let first = true;
     for (const dr of drawings) {
-      const keys = dr.querySelectorAll(':scope > div > div:last-child > div > div');
+      // ラベルが長すぎるキー(LM(2,MOD_LALT) など)は、VIA が吹き出し用の箱を隣に足すので、
+      // 絵(canvas)を持つものだけを数える。数えないと 61 個になって色付けがずれる。
+      const keys = [...dr.querySelectorAll(':scope > div > div:last-child > div > div')]
+        .filter((k) => k.querySelector('canvas'));
       if (keys.length !== LAYOUT.length) continue;
       const paint = onKeymap && first;  // 並びの最初の 60 キーの絵がキー配列の画面のもの
       first = false;
