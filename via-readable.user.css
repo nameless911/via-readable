@@ -1,7 +1,7 @@
 /* ==UserStyle==
 @name         VIA readable
 @namespace    local
-@version      1.27.0
+@version      1.28.0
 @description  VIA の薄ピンクとフォントを、Filer の theme.py と同じ Win11 配色と UD フォントに置き換える。Windows のライト/ダークに追従。
 ==/UserStyle== */
 
@@ -823,6 +823,24 @@ div:has(> label + button + button + button + button) > button {
   border: 1px solid var(--p-border) !important;
   border-radius: 4px !important;
   margin: 0 !important;
+}
+
+/* ---------- キーコードの一覧(メディア・特別・レイヤーなど、基本以外) ----------
+   VIA は名前を 1 行に詰めて、はみ出した分を「Mou…」「Clicky Tog…」と切る。名前は全部持っているのに。
+   基本の一覧と同じく、「…」で切らずに単語の切れ目で折り返す。枠が 50px しかないので 11px。
+   (基本の一覧は下の ANSI の並びのルールが上書きする) */
+div[style^="pointer-events: all"] + div:not(:last-child) + div div:has(> :nth-child(13) > div):not(:has(canvas)) > *,
+div[style^="pointer-events: all"] + div:not(:last-child) + div div:has(> :nth-child(13) > div):not(:has(canvas)) > * > * {
+  font-size: 11px !important;
+  line-height: 1.15 !important;
+  white-space: normal !important;
+  text-overflow: clip !important;
+  overflow: visible !important;
+  word-break: keep-all !important;
+  overflow-wrap: normal !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  text-align: center;
 }
 
 /* ---------- キーコードの一覧(基本)を ANSI の並びにする ----------
