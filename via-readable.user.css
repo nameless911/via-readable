@@ -1,7 +1,7 @@
 /* ==UserStyle==
 @name         VIA readable
 @namespace    local
-@version      1.28.0
+@version      1.28.1
 @description  VIA の薄ピンクとフォントを、Filer の theme.py と同じ Win11 配色と UD フォントに置き換える。Windows のライト/ダークに追従。
 ==/UserStyle== */
 
@@ -273,8 +273,11 @@ div[style*="pointer-events: all"][style*="position: absolute"] > div > div:last-
 }
 /* 箱の中に VIA が持っているラベルの文字(LM(2,MOD_LALT))を、キーの天面に常に出す。
    キーの絵(canvas)の方は大きな字で途中までしか描けないので消す。
-   CSS では好きな位置で改行できないので、等幅の UD フォントで 9 文字ごとに折り返す(LM(2,MOD_ / LALT))。
-   文字の大きさはキーの幅に合わせる(1 キーの幅なら小さく、最大 12px)。 */
+   「LM」と「(2,MOD_LALT)」の 2 行にしたい。CSS では好きな位置で改行できないので、等幅の UD フォントで
+   幅を 12 文字にして、1 行目の右側にだけ 10 文字分の見えない箱(::before の float)を置く。
+   1 行目には 2 文字(LM)しか入らず、2 行目は 12 文字(2,MOD_LALT の括弧込み)がちょうど入る。
+   LT(1,KC_SPC) など、頭が 2 文字のものは同じように折れる。
+   文字の大きさは 12 文字がキーの幅に収まるように決める(最大 12px)。 */
 div[style*="pointer-events: all"][style*="position: absolute"] > div > div:last-child > div:has(> div > div[style*="transform-origin: left center"]) canvas {
   opacity: 0 !important;
 }
@@ -298,10 +301,10 @@ div[style*="pointer-events: all"][style*="position: absolute"] > div > div:last-
   margin-left: 3px !important;
   border-radius: 0 !important;
   font-family: "BIZ UDGothic", "BIZ UDゴシック", Consolas, monospace !important;
-  font-size: min(12px, calc(100cqi / 4.8)) !important;
+  font-size: min(12px, calc(100cqi / 6.3)) !important;
   line-height: 1.45 !important;
   font-weight: 700 !important;
-  width: 9ch !important;
+  width: 12ch !important;
   box-sizing: content-box !important;
   white-space: normal !important;
   word-break: break-all !important;
@@ -314,6 +317,12 @@ div[style*="pointer-events: all"][style*="position: absolute"] > div > div:last-
 }
 div[style*="pointer-events: all"][style*="position: absolute"] > div > div:last-child > div > div > div[style*="transform-origin: left center"] > div:not(:first-child) {
   display: none !important;  /* 吹き出しのしっぽ */
+}
+div[style*="pointer-events: all"][style*="position: absolute"] > div > div:last-child > div > div > div[style*="transform-origin: left center"] > div:first-child::before {
+  content: "";
+  float: right;
+  width: 10ch;
+  height: 1lh;  /* 1 行目にだけ効く */
 }
 /* 選択中(強調色の天面)のときは黒い文字 */
 div[style*="pointer-events: all"][style*="position: absolute"] > div > div:last-child > div:has(> div[style*="select-glow"]) > div > div[style*="transform-origin: left center"] > div:first-child {
